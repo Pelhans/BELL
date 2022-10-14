@@ -1,0 +1,8 @@
+# 项目介绍
+Better Entity Link Library ，一个更好的实体连接库
+
+# 如何编译
+mkdir build;
+cd build;
+cmake ../submodules;
+make
