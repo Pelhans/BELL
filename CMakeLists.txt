@@ -8,6 +8,7 @@ ADD_DEFINITIONS(
 )
 ##############################
 set(BELL_ROOT "${PROJECT_SOURCE_DIR}/src")
+set(MUDUO_PATH "${PROJECT_SOURCE_DIR}/submodules")
 
 set(CMAKE_VERBOSE_MAKEFILE OFF)
 
@@ -16,7 +17,7 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
 elseif(CMAKE_BUILD_TYPE STREQUAL "Noop")
   set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS} -g -o0 -fPIC -w -Wl,--export-dynamic -Wno-deprecated -fpermissive")
 else()
-  set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS} -g -o3 -fPIC -w -Wl,--export-dynamic -Wno-deprecated -fpermissive")
+  set(CMAKE_CXX_FLAGS "-lstdc++ -std=c++11 ${CMAKE_CXX_FLAGS} -g -o3 -fPIC -w -Wl,--export-dynamic -Wno-deprecated -fpermissive")
 endif(CMAKE_BUILD_TYPE STREQUAL "Debug")
 
 message("=================================")
@@ -24,24 +25,37 @@ message("Build Type:==${CMAKE_BUILD_TYPE}==")
 message("CXX_FLAGS:==${CMAKE_CXX_FLAGS}==")
 message("=================================")
 
+set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
+set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 
-if(NOT CMAKE_BUILD_TYPE)
-  set(CMAKE_BUILD_TYPE "Release")
-endif()
+# if(NOT CMAKE_BUILD_TYPE)
+#   set(CMAKE_BUILD_TYPE "Release")
+# endif()
 
 include_directories(
+  "${MUDUO_PATH}"
+  # "${MUDUO_PATH}/muduo"
+  # "${MUDUO_PATH}/muduo/base"
+  # "${MUDUO_PATH}/muduo/net"
   "${BELL_ROOT}"
   "${BELL_ROOT}/plugins"
   "${BELL_ROOT}/plugins/word_seg"
   # "${BELL_ROOT}/common"
 )
 
-# link_directories(
-#   "${BELL_ROOT}/common"
-#   "${BELL_ROOT}/common/xgboost"
-#   "${BELL_ROOT}/common/eigen"
+# LINK_LIBRARIES(
+#   muduo_net
+#   muduo_base
 # )
 
+ link_directories(
+  ${MUDUO_PATH}/muduo
+  ${MUDUO_PATH}/muduo/base
+  ${MUDUO_PATH}/muduo/net
+ )
+
 # add_subdirectory(${BELL_ROOT}/common common)
+add_subdirectory(${MUDUO_PATH}/muduo/base)
+add_subdirectory(${MUDUO_PATH}/muduo/net)
 add_subdirectory(${BELL_ROOT}/plugins plugins)
 add_subdirectory(${BELL_ROOT}/main main)
