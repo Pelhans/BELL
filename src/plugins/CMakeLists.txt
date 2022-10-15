@@ -1,0 +1,11 @@
+#add_subdirectory(word_seg)
+file(GLOB LIB_SOURCES
+    "word_seg/*.cpp"
+)
+
+ADD_LIBRARY(plugins_lib SHARED ${LIB_SOURCES})
+
+TARGET_LINK_LIBRARIES(
+    plugins_lib
+    PUBLIC
+)
