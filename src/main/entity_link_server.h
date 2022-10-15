@@ -13,8 +13,6 @@
 #include <unistd.h>
 #include <sys/time.h>
 
-#include "seg_handler.h"
-
 using namespace muduo;
 using namespace muduo::net;
 

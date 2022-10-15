@@ -13,4 +13,5 @@ TARGET_LINK_LIBRARIES(
    pthread
    rt
    plugins_lib
+   common_lib
 )

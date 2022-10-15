@@ -2,7 +2,9 @@
 Better Entity Link Library ，一个更好的实体连接库
 
 # 如何编译
-mkdir build;
-cd build;
-cmake ../submodules;
-make
+运行 sh build.sh 即可
+
+# 依赖
+* Linux kernel version >= 2.6.28.
+* GCC >= 4.7 or Clang >= 3.5
+* Boost (for boost::any only.)

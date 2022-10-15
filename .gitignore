@@ -1,3 +1,4 @@
+bin/better_entity_link_server
+bin/*.log
 build/
-bin/
 lib/

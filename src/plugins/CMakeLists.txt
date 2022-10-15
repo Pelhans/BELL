@@ -8,4 +8,5 @@ ADD_LIBRARY(plugins_lib SHARED ${LIB_SOURCES})
 TARGET_LINK_LIBRARIES(
     plugins_lib
     PUBLIC
+    common_lib
 )

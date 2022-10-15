@@ -1,4 +1,6 @@
 #include "entity_link_server.h"
+#include "seg_handler.h"
+
 #include <unistd.h>
 
 using namespace muduo;
