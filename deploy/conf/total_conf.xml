@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF_8"?>
+<root>
+    <node>
+        <entry>
+            <!--Server 整体配置-->
+            <key>ConfServConfig</key>
+            <value>bell_server.conf</value>
+        </entry>
+
+        <entry>
+            <!--模型文件读取相关配置-->
+            <word_seg_v1_conf>data/model/word_seg_model</word_seg_v1_conf>
+        </entry>
+
+    </node>
+</root>

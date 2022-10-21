@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF_8"?>
+<root>
+    <node>
+        <name>word_seg_v1</name>
+        <enable>1</enable>
+        <mode_dir>./data/model/word_seg_model/</model_dir>
+
+        <vocab_size>22100</vocab_size>
+        <embdim>60</embdim>
+        <tag_size>4</tag_size>
+        <max_len>20</max_len>
+
+        <word2id_path>./data/model/word_seg_model/word2id.dat</word2id_path>
+        <word_embedding_path>./data/model/word_seg_model/embed.embedding.weight</word_embedding_path>
+
+        <conv_layer_11_path_prefix>./data/model/word_seg_model/layer_1cnn_1</conv_layer_11_path_prefix>
+        <conv_layer_13_path_prefix>./data/model/word_seg_model/layer_1cnn_3</conv_layer_13_path_prefix>
+        <conv_layer_15_path_prefix>./data/model/word_seg_model/layer_1cnn_5</conv_layer_15_path_prefix>
+
+        <conv_layer_23_path_prefix>./data/model/word_seg_model/layer_2cnn_3</conv_layer_23_path_prefix>
+        <conv_layer_25_path_prefix>./data/model/word_seg_model/layer_2cnn_5</conv_layer_25_path_prefix>
+        <conv_layer_27_path_prefix>./data/model/word_seg_model/layer_2cnn_7</conv_layer_27_path_prefix>
+        
+        <conv_layer_31_path_prefix>./data/model/word_seg_model/layer_3cnn_1</conv_layer_31_path_prefix>
+        <conv_layer_33_path_prefix>./data/model/word_seg_model/layer_3cnn_3</conv_layer_33_path_prefix>
+        <conv_layer_35_path_prefix>./data/model/word_seg_model/layer_3cnn_5</conv_layer_35_path_prefix>
+
+        <fc_layer_1_prefix>./data/model/word_seg_model/linear_act</fc_layer_1_prefix>
+        <fc_layer_2_prefix>./data/model/word_seg_model/linear_out</fc_layer_2_prefix>
+    </node>
+</root>
