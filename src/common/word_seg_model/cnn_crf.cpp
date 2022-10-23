@@ -14,14 +14,21 @@ using namespace bell;
 
 std::vector<ResultTag> CNN_CRF::forward(std::vector<std::string>& input) {
     std::vector<ResultTag> result_tag;
-    int seq_len = input.size();
+    int max_len = m_max_len;
+    int seq_len = input.size() < max_len ? input.size() : max_len;
     if (seq_len <= 1) {
         return result_tag;
     }
 
+    EigenOp::padding(input, max_len, "[PAD]");
     MatrixXf emb_input = EigenOp::Embedding(input, m_word2id, m_embedding, m_emb_dim);
     
     MatrixXf conv1d_layer_1_out = EigenOp::multi_kernel_conv1d(emb_input, m_conv_layer_1_1, m_conv_layer_1_3, m_conv_layer_1_5, "relu");
+    MatrixXf conv1d_layer_2_out = EigenOp::multi_kernel_conv1d(conv1d_layer_1_out, m_conv_layer_2_3, m_conv_layer_2_5, m_conv_layer_2_7, "relu");
+    MatrixXf conv1d_layer_3_out = EigenOp::multi_kernel_conv1d(conv1d_layer_2_out, m_conv_layer_3_1, m_conv_layer_3_3, m_conv_layer_3_5, "relu");
+
+    MatrixXf linear_out_1 = EigenOp::Linear(conv1d_layer_3_out, m_fc_0_layer, "tanh");
+    MatrixXf linear_out_2 = EigenOp::Linear(linear_out_1, m_fc_1_layer, "");
 }
 
 bool CNN_CRF::load(std::string& cnn_config) {

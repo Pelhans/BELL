@@ -112,6 +112,21 @@ MatrixXf EigenOp::im2col(MatrixXf& input, int kernel_size) {
     return output;
 }
 
+void EigenOp::padding(std::vector<std::string>& input, int max_len, std::string pad_str) {
+    int size_input = input.size();
+    if (size_input < max_len) {
+        for (size_t i=0; i<max_len-size_input; ++i) {
+            input.push_back(pad_str);
+        }
+        return;
+    } else if (size_input > max_len) {
+        while (input.size() > max_len) {
+            input.pop_back();
+        }
+        return;
+    }
+}
+
 MatrixXf EigenOp::Embedding(std::vector<std::string>& input, std::map<std::string, int>& word2id, Eigen::MatrixXf& embedding, int emb_dim) {
     int row = input.size();
     MatrixXf emb_input(row, emb_dim);
@@ -126,6 +141,17 @@ MatrixXf EigenOp::Embedding(std::vector<std::string>& input, std::map<std::strin
         emb_input.row(i) = embedding.row(id);
     }
     return emb_input;
+}
+
+MatrixXf EigenOp::Linear(MatrixXf& input, fnnConnectLayer& fc, std::string active) {
+    MatrixXf output = input*fc.weight;
+    output.rowwise() += fc.bias.transpose();
+    if (active == "relu") {
+        output = relu(output);
+    } else if (active == "tanh") {
+        output = ctanh(output);
+    }
+    return output;
 }
 
 MatrixXf EigenOp::Conv1d(MatrixXf& input, conv1DLayer& conv, std::string active) {
