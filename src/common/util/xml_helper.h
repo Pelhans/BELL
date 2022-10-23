@@ -34,4 +34,6 @@ void GET_XML_CONF_INT(const XmlNode& root, const std::string field_name, int def
 void GET_XML_CONF_DOUBLE(const XmlNode& root, const std::string field_name, double default_val, double* dst);
 void GET_XML_CONF_STRING(const XmlNode& root, const std::string field_name, const std::string& default_val, std::string* dst);
 
+const std::vector<XmlNode> GET_XML_CONF_LIST(const XmlNode& root, const std::string& field_name);
+
 }

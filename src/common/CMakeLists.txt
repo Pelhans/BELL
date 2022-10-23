@@ -1,5 +1,6 @@
 file(GLOB LIB_SOURCES
     "word_seg_model/*.cpp"
+    "util/*.cpp"
 )
 
 set(LIB_LINK_LIBRARIES
