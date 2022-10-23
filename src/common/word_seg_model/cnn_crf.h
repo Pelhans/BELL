@@ -25,6 +25,7 @@ public:
     ~CNN_CRF();
 
     bool load(std::string& cnn_config);
+    std::vector<ResultTag> forward(std::vector<std::string>& input);
 
 private:
     int m_vocab_size;

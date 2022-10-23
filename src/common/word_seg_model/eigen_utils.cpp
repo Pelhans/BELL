@@ -94,6 +94,74 @@ bool EigenOp::ReadDataForVector(std::string path, int a, VectorXf& vectorxf) {
     return true;
 }
 
+MatrixXf EigenOp::im2col(MatrixXf& input, int kernel_size) {
+    int length = input.rows();
+    int dim = input.cols();
+    MatrixXf output = MatrixXf::Zero(length, kernel_size*dim);
+
+    for (int i = 0; i<length; ++i) {
+        int start = i - kernel_size/2;
+        for (int j=0; j<kernel_size; ++j, ++start) {
+            if (start >= 0 && start<length) {
+                for (int d=0; d<dim; ++d) {
+                    output(i, j*dim+d) = input(start, d);
+                }
+            }
+        }
+    }
+    return output;
+}
+
+MatrixXf EigenOp::Embedding(std::vector<std::string>& input, std::map<std::string, int>& word2id, Eigen::MatrixXf& embedding, int emb_dim) {
+    int row = input.size();
+    MatrixXf emb_input(row, emb_dim);
+    int id = 1;
+
+    for (size_t i = 0; i<input.size(); ++i) {
+        if (word2id.find(input[i]) == word2id.end()) {
+            id = 1;
+        } else {
+            id = word2id[input[i]];
+        }
+        emb_input.row(i) = embedding.row(id);
+    }
+    return emb_input;
+}
+
+MatrixXf EigenOp::Conv1d(MatrixXf& input, conv1DLayer& conv, std::string active) {
+    MatrixXf input_2_col = EigenOp::im2col(input, conv.kernel_size);
+    MatrixXf output = input_2_col * conv.weight;
+    output.rowwise() += conv.bias.transpose();
+
+    if (active == "relu") {
+        output = relu(output);
+    } else if (active == "tanh") {
+        output = ctanh(output);
+    } else {
+        LOG_ERROR << "word seg cnn_crf model conv1d active func not exist: " << active.c_str();
+    }
+    return output;
+}
+
+MatrixXf EigenOp::multi_kernel_conv1d(MatrixXf& emb_input, conv1DLayer& layer1, conv1DLayer& layer2, conv1DLayer& layer3, const std::string active) {
+    MatrixXf conv11_input = Conv1d(emb_input, layer1, "relu");
+    MatrixXf conv13_input = Conv1d(emb_input, layer1, "relu");
+    MatrixXf conv15_input = Conv1d(emb_input, layer1, "relu");
+
+    MatrixXf out_input(conv11_input.rows(), conv11_input.cols() + conv13_input.cols() + conv15_input.cols());
+    out_input << conv11_input, conv13_input, conv15_input;
+    return out_input;
+}
+
+MatrixXf EigenOp::ctanh(MatrixXf& output) {
+    for (int i=0; i<output.rows(); ++i) {
+        for (int j=0; j<output.cols(); ++j) {
+            output(i, j) = std::tanh(output(i, j));
+        }
+    }
+    return output;
+}
+
 MatrixXf EigenOp::relu(MatrixXf& output) {
     for (int i=0; i<output.rows(); ++i) {
         for (int j=0; j<output.cols(); ++j) {

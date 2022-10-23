@@ -27,6 +27,13 @@ public:
 
     // NN module
     static MatrixXf relu(MatrixXf& output);
+    static MatrixXf ctanh(MatrixXf& output);
+
+    static MatrixXf Conv1d(MatrixXf& input, conv1DLayer& conv, std::string active);
+    static MatrixXf multi_kernel_conv1d(MatrixXf& emb_input, conv1DLayer& layer1, conv1DLayer& layer2, conv1DLayer& layer3, const std::string active);
+
+    static MatrixXf im2col(MatrixXf& input, int kernel_size);
+    static MatrixXf Embedding(std::vector<std::string>& input, std::map<std::string, int>& word2id, Eigen::MatrixXf& embedding, int emb_dim);
 
     // basic func
     static bool ReadData(std::string path, int a, int b, MatrixXf& matrix);

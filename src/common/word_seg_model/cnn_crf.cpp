@@ -12,47 +12,6 @@
 
 using namespace bell;
 
-MatrixXf CNN_CRF::Embedding(std::vector<std::string>& input) {
-    int row = input.size();
-    MatrixXf emb_input(row, m_emb_dim);
-    int id = 1;
-
-    for (size_t i = 0; i<input.size(); ++i) {
-        if (m_word2id.find(input[i]) == m_word2id.end()) {
-            id = 1;
-        } else {
-            id = m_word2id[input[i]];
-        }
-        emb_input.row(i) = m_embedding.row(id);
-    }
-    return emb_input;
-}
-
-Matrix CNN_CRF::Conv1d(MatrixXf& inbput, conv1DLayer& conv, std::string& active) {
-    MatrixXf input_2_col = EigenOp::im2col(input, conv.kernel_size);
-    MatrixXf output = input_2_col * conv.weight;
-    output.rowwise() += conv.bias.transpose();
-
-    if (active == "relu") {
-        output = EigenOp::relu(output);
-    } else if (active == "tanh") {
-        output = EigenOp::ctanh(output);
-    } else {
-        LOG_ERROR << "word seg cnn_crf model conv1d active func not exist: " << active.c_str();
-    }
-    return output;
-}
-
-Matrix CNN_CRF::multi_kernel_conv1d(MatrixXf& emb_input, conv1DLayer& layer1, conv1DLayer& layer1, conv1DLayer& layer1, std::string& active) {
-    MatrixXf conv11_input = Conv1d(emb_input, layer1, "relu");
-    MatrixXf conv13_input = Conv1d(emb_input, layer1, "relu");
-    MatrixXf conv15_input = Conv1d(emb_input, layer1, "relu");
-
-    MatrixXf out_input(conv11_input.rows(), conv11_input.cols() + conv13_input.cols() + conv16_input.cols());
-    out_input << conv11_input, conv13_input, conv15_input;
-    return out_input;
-}
-
 std::vector<ResultTag> CNN_CRF::forward(std::vector<std::string>& input) {
     std::vector<ResultTag> result_tag;
     int seq_len = input.size();
@@ -60,9 +19,9 @@ std::vector<ResultTag> CNN_CRF::forward(std::vector<std::string>& input) {
         return result_tag;
     }
 
-    MatrixXf emb_input = Embedding(input);
+    MatrixXf emb_input = EigenOp::Embedding(input, m_word2id, m_embedding, m_emb_dim);
     
-    Matrix conv1d_layer_1_out = multi_kernel_conv1d(emb_input, m_conv_layer_1_1, m_conv_layer_1_3, m_conv_layer_1_5, "relu")
+    MatrixXf conv1d_layer_1_out = EigenOp::multi_kernel_conv1d(emb_input, m_conv_layer_1_1, m_conv_layer_1_3, m_conv_layer_1_5, "relu");
 }
 
 bool CNN_CRF::load(std::string& cnn_config) {
