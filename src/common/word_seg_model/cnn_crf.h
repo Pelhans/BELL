@@ -9,15 +9,9 @@
 #include "eigen_utils.h"
 
 const std::map<int, std::string> label2tag = { {0, "S"},
-{1, "B"},
-{2, "I"},
-{3, "E"}
-};
-
-struct ResultTag {
-    double prob;
-    std::vector<std::string> tags;
-};
+                                                {1, "B"},
+                                                {2, "I"},
+                                                {3, "E"}};
 
 class CNN_CRF {
 public:
@@ -32,6 +26,8 @@ private:
     int m_emb_dim;
     int m_tag_size;
     int m_max_len;
+    std::string m_decode_type;
+    int m_nbest;
 
     Eigen::MatrixXf m_embedding;
 

@@ -13,11 +13,11 @@
 using namespace bell;
 
 std::vector<ResultTag> CNN_CRF::forward(std::vector<std::string>& input) {
-    std::vector<ResultTag> result_tag;
+    std::vector<ResultTag> result_tags;
     int max_len = m_max_len;
     int seq_len = input.size() < max_len ? input.size() : max_len;
     if (seq_len <= 1) {
-        return result_tag;
+        return result_tags;
     }
 
     EigenOp::padding(input, max_len, "[PAD]");
@@ -28,7 +28,19 @@ std::vector<ResultTag> CNN_CRF::forward(std::vector<std::string>& input) {
     MatrixXf conv1d_layer_3_out = EigenOp::multi_kernel_conv1d(conv1d_layer_2_out, m_conv_layer_3_1, m_conv_layer_3_3, m_conv_layer_3_5, "relu");
 
     MatrixXf linear_out_1 = EigenOp::Linear(conv1d_layer_3_out, m_fc_0_layer, "tanh");
-    MatrixXf linear_out_2 = EigenOp::Linear(linear_out_1, m_fc_1_layer, "");
+    MatrixXf logits = EigenOp::Linear(linear_out_1, m_fc_1_layer, "");
+
+    if (m_decode_type == "crf") {
+        if (m_nbest == 2) {
+            result_tags = EigenOp::viterbi_decode_nbest(logits, seq_len, m_tag_size, m_crf_transistion_layer, m_nbest, label2tag);
+        } else {
+            result_tags = EigenOp::viterbi_decode(logits, seq_len, m_tag_size, m_crf_transistion_layer, label2tag);
+        }
+    } else {
+        result_tags = EigenOp::greed_decode(logits, seq_len, m_tag_size, label2tag);
+    }
+
+    return result_tags;
 }
 
 bool CNN_CRF::load(std::string& cnn_config) {

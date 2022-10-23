@@ -20,6 +20,11 @@ struct fnnConnectLayer {
     Eigen::VectorXf bias;
 };
 
+struct ResultTag {
+    double prob;
+    std::vector<std::string> tags;
+};
+
 class EigenOp{
 public:
     EigenOp() {};
@@ -28,11 +33,26 @@ public:
     // NN module
     static MatrixXf relu(MatrixXf& output);
     static MatrixXf ctanh(MatrixXf& output);
+    static bool softmax(Eigen::VectorXf& input_vector);
+    static bool softmax(MatrixXf& matrix, MatrixXf& out, int dim);
 
     static MatrixXf Linear(MatrixXf& input, fnnConnectLayer& fc, std::string active);
     static MatrixXf Conv1d(MatrixXf& input, conv1DLayer& conv, std::string active);
     static MatrixXf multi_kernel_conv1d(MatrixXf& emb_input, conv1DLayer& layer1, conv1DLayer& layer2, conv1DLayer& layer3, const std::string active);
 
+    // decode
+    static std::vector<ResultTag> viterbi_decode_nbest(Eigen::MatrixXf& input, int seq_len, int tag_size,
+                                                Eigen::MatrixXf& crf_transistion, int nbest, const std::map<int, std::string>& label2tag);
+    static std::vector<ResultTag> viterbi_decode(Eigen::MatrixXf& input, int seq_len, int tag_size,
+                                                Eigen::MatrixXf& crf_transistion, const std::map<int, std::string>& label2tag);
+    static  std::vector<ResultTag> greed_decode(Eigen::MatrixXf& input, int seq_len, int tag_size, const std::map<int, std::string>& label2tag);
+    static void get_top2_values(Eigen::MatrixXf& input, Eigen::MatrixXf& partition, Eigen::MatrixXf& indexs);
+    static std::vector<ResultTag> mapping_id(Eigen::MatrixXf& decode_id, Eigen::VectorXf& scores, const std::map<int, std::string>& label2tag);
+    static std::vector<ResultTag> mapping_id(Eigen::MatrixXf& decode_id, const std::map<int, std::string>& label2tag);
+    static void get_max_and_index(Eigen::MatrixXf& input, Eigen::VectorXf& partition, Eigen::VectorXi& indexs);
+    static void get_max_index(Eigen::MatrixXf& input, Eigen::VectorXi& indexs, int axis=0);
+
+    // matrix op
     static MatrixXf im2col(MatrixXf& input, int kernel_size);
     static void padding(std::vector<std::string>& input, int max_len, std::string pad_str);
     static MatrixXf Embedding(std::vector<std::string>& input, std::map<std::string, int>& word2id, Eigen::MatrixXf& embedding, int emb_dim);
