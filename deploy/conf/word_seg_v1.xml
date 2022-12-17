@@ -3,7 +3,7 @@
     <node>
         <name>word_seg_v1</name>
         <enable>1</enable>
-        <mode_dir>./data/model/word_seg_model/</model_dir>
+        <model_dir>./data/model/word_seg_model/</model_dir>
 
         <vocab_size>22100</vocab_size>
         <embdim>60</embdim>
@@ -27,5 +27,7 @@
 
         <fc_layer_1_prefix>./data/model/word_seg_model/linear_act</fc_layer_1_prefix>
         <fc_layer_2_prefix>./data/model/word_seg_model/linear_out</fc_layer_2_prefix>
+
+        <crf_trans_prefix>./data/model/word_seg_model/bio_transitions</crf_trans_prefix>
     </node>
 </root>

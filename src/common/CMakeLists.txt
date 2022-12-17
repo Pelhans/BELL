@@ -5,8 +5,8 @@ file(GLOB LIB_SOURCES
 
 set(LIB_LINK_LIBRARIES
     -lpthread
+    -lxml2
 )
 
-add_library(common_lib STATIC ${LIB_SOURCES})
-target_link_libraries(common_lib ${LIB_LINK_LIBRARIES}
-)
+add_library(common_lib SHARED ${LIB_SOURCES})
+target_link_libraries(common_lib ${LIB_LINK_LIBRARIES})

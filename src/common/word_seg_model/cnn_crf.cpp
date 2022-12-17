@@ -146,6 +146,13 @@ bool CNN_CRF::load(std::string& cnn_config) {
             LOG_INFO << "word seg cnn_crf model fc_layer_1_prefix empty";
             return false;
         }
+
+        // 转移矩阵层
+        bell::GET_XML_CONF_STRING(*iter, "crf_trans_prefix", "", &crf_path);
+        if (crf_path.empty()) {
+            LOG_INFO << "word seg cnn_crf model crf_trans_prefix empty";
+            return false;
+        }
     }
 
     // word2id

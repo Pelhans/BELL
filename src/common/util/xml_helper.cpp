@@ -1,4 +1,4 @@
-#include "util/xml_helper.h"
+#include "xml_helper.h"
 
 namespace bell {
 
@@ -34,6 +34,20 @@ const XmlNode XmlNode::findChild(const std::string& item_str) const {
     return XmlNode();
 }
 
+const std::vector<XmlNode> XmlNode::findAllChildren(const std::string& item_str) const {
+    std::vector<XmlNode> vec;
+    if (m_node == NULL || m_node->children == NULL) {
+        return vec;
+    }
+
+    for (xmlNodePtr cur = m_node->children; cur != NULL; cur = cur->next) {
+        if (xmlStrcmp(cur->name, BAD_CAST item_str.c_str()) == 0) {
+            vec.push_back(XmlNode(cur));
+        }
+    }
+    return vec;
+}
+
 const XmlNode XmlDoc::parser(const std::string& filename) {
     m_doc = xmlParseFile(filename.c_str());
     return XmlNode(xmlDocGetRootElement(m_doc));
@@ -61,7 +75,7 @@ void GET_XML_CONF_DOUBLE(const XmlNode& root, const std::string field_name, doub
     }
 }
 
-void GET_XML_CONF_STRING(const XmlNode& root, const std::string field_name, std::string default_val, std::string* dst) {
+void GET_XML_CONF_STRING(const XmlNode& root, const std::string field_name, const std::string default_val, std::string* dst) {
     std::string field_name_val = root[field_name].getText();
     std::string val = default_val;
     if (!field_name_val.empty()) {
