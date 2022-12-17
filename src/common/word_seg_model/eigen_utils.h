@@ -46,9 +46,9 @@ public:
     static std::vector<ResultTag> viterbi_decode(Eigen::MatrixXf& input, int seq_len, int tag_size,
                                                 Eigen::MatrixXf& crf_transistion, const std::map<int, std::string>& label2tag);
     static  std::vector<ResultTag> greed_decode(Eigen::MatrixXf& input, int seq_len, int tag_size, const std::map<int, std::string>& label2tag);
-    static void get_top2_values(Eigen::MatrixXf& input, Eigen::MatrixXf& partition, Eigen::MatrixXf& indexs);
-    static std::vector<ResultTag> mapping_id(Eigen::MatrixXf& decode_id, Eigen::VectorXf& scores, const std::map<int, std::string>& label2tag);
-    static std::vector<ResultTag> mapping_id(Eigen::MatrixXf& decode_id, const std::map<int, std::string>& label2tag);
+    static void get_top2_values(Eigen::MatrixXf& input, Eigen::MatrixXf& partition, Eigen::MatrixXi& indexs);
+    static std::vector<ResultTag> mapping_id(Eigen::MatrixXi& decode_id, Eigen::VectorXf& scores, const std::map<int, std::string>& label2tag);
+    static std::vector<ResultTag> mapping_id(Eigen::VectorXi& decode_id, const std::map<int, std::string>& label2tag);
     static void get_max_and_index(Eigen::MatrixXf& input, Eigen::VectorXf& partition, Eigen::VectorXi& indexs);
     static void get_max_index(Eigen::MatrixXf& input, Eigen::VectorXi& indexs, int axis=0);
 

@@ -239,13 +239,13 @@ std::vector<ResultTag> EigenOp::viterbi_decode_nbest(Eigen::MatrixXf& input, int
     }
 
     std::vector<Eigen::MatrixXf> partition_history;
-    std::vector<Eigen::MatrixXf> back_points;
+    std::vector<Eigen::MatrixXi> back_points;
     Eigen::VectorXf partition_v = scores[0].row(tag_size - 2);
     Eigen::MatrixXf partition_m = scores[0].row(tag_size - 2);
     partition_history.push_back(partition_m);
 
     Eigen::MatrixXf partition_v2 = Eigen::MatrixXf::Zero(2, tag_size);
-    Eigen::MatrixXf indexs = Eigen::MatrixXf::Zero(2, tag_size);
+    Eigen::MatrixXi indexs = Eigen::MatrixXi::Zero(2, tag_size);
 
     for (int i=1; i<seq_len; ++i) { //tag * tag
         if (i == 1) {
@@ -293,7 +293,7 @@ std::vector<ResultTag> EigenOp::viterbi_decode_nbest(Eigen::MatrixXf& input, int
     get_top2_values(last_values, partition_v2, indexs);
     Eigen::VectorXf final_scores = partition_v2.col(tag_size - 1);
     Eigen::VectorXi pointer = indexs.col(tag_size - 1);
-    Eigen::MatrixXi decode_id = Eigen::MatrixXf::Zero(seq_len, nbest);
+    Eigen::MatrixXi decode_id = Eigen::MatrixXi::Zero(seq_len, nbest);
     decode_id.row(seq_len-1) = pointer / nbest;
     for (int i=seq_len-2; i>=0; i--) {
         for (int j=0; j<nbest; j++) {
@@ -322,9 +322,9 @@ std::vector<ResultTag> EigenOp::viterbi_decode(Eigen::MatrixXf& input, int seq_l
     }
 
     std::vector<Eigen::VectorXf> partition_history;
-    Eigen::MatrixXf back_points = Eigen::VectorXf::Zero(seq_len, tag_size);
+    Eigen::MatrixXi back_points = Eigen::VectorXi::Zero(seq_len, tag_size);
     Eigen::VectorXi indexs = Eigen::VectorXi::Zero(tag_size);
-    Eigen::VectorXf partition = score[0].row(tag_size - 2);
+    Eigen::VectorXf partition = scores[0].row(tag_size - 2);
     partition_history.push_back(partition);
 
     for (int i=1; i<seq_len; ++i) {
@@ -335,7 +335,7 @@ std::vector<ResultTag> EigenOp::viterbi_decode(Eigen::MatrixXf& input, int seq_l
     }
 
     Eigen::VectorXf last_partition = partition_history.back();
-    Eigen::MatrixXf last_value = crf_trasistion.colwise() + last_partition;
+    Eigen::MatrixXf last_value = crf_transistion.colwise() + last_partition;
     Eigen::VectorXi last_bp = Eigen::VectorXi::Zero(tag_size);
     get_max_index(last_value, last_bp);
 
@@ -407,7 +407,7 @@ void EigenOp::get_max_index(Eigen::MatrixXf& input, Eigen::VectorXi& indexs, int
     }
 }
 
-std::vector<ResultTag> EigenOp::mapping_id(Eigen::MatrixXf& decode_id, const std::map<int, std::string>& label2tag) {
+std::vector<ResultTag> EigenOp::mapping_id(Eigen::VectorXi& decode_id, const std::map<int, std::string>& label2tag) {
     int size = decode_id.size();
     std::vector<ResultTag> result_tags;
     ResultTag result_tag;
@@ -425,9 +425,9 @@ std::vector<ResultTag> EigenOp::mapping_id(Eigen::MatrixXf& decode_id, const std
     return result_tags;
 }
 
-std::vector<ResultTag> EigenOp::mapping_id(Eigen::MatrixXf& decode_id, Eigen::VectorXf& scores, const std::map<int, std::string>& label2tag) {
+std::vector<ResultTag> EigenOp::mapping_id(Eigen::MatrixXi& decode_id, Eigen::VectorXf& scores, const std::map<int, std::string>& label2tag) {
     std::vector<ResultTag> result_tags;
-    int rows = decode_id.rows(), cols = deocde_id.cols();
+    int rows = decode_id.rows(), cols = decode_id.cols();
 
     if (scores.size() != decode_id.rows()) {
         return result_tags;
@@ -451,7 +451,7 @@ std::vector<ResultTag> EigenOp::mapping_id(Eigen::MatrixXf& decode_id, Eigen::Ve
     return result_tags;
 }
 
-void EigenOp::get_top2_values(Eigen::MatrixXf& input, Eigen::MatrixXf& partition, Eigen::MatrixXf& indexs) {
+void EigenOp::get_top2_values(Eigen::MatrixXf& input, Eigen::MatrixXf& partition, Eigen::MatrixXi& indexs) {
     int rows = input.rows(), cols = input.cols();
     for (int col=0; col<cols; ++col) {
         float max_elem = INT_MIN, second_max_elem = INT_MIN;
