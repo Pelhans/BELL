@@ -51,7 +51,7 @@ bool CNN_CRF::load(std::string& cnn_config) {
         LOG_INFO << "Faild to get root node, conf file:" << cnn_config.c_str();
         return false;
     }
-
+    LOG_INFO << "开始加载模型文件 ";
     auto node_list = bell::GET_XML_CONF_LIST(root, "node");
 
     std::string model_dir, word2id_path, word_embedding_path;
@@ -71,10 +71,17 @@ bool CNN_CRF::load(std::string& cnn_config) {
         LOG_INFO << "模型目录为: " << model_dir.c_str();
 
         // 参数
-        bell::GET_XML_CONF_INT(*iter, "vocab_size", 22110, &m_vocab_size);
+        bell::GET_XML_CONF_INT(*iter, "vocab_size", 22200, &m_vocab_size);
         bell::GET_XML_CONF_INT(*iter, "emb_dim", 60, &m_emb_dim);
         bell::GET_XML_CONF_INT(*iter, "tag_size", 4, &m_tag_size);
         bell::GET_XML_CONF_INT(*iter, "max_len", 64, &m_max_len);
+
+        // word2id
+        bell::GET_XML_CONF_STRING(*iter, "word2id_path", "", &word2id_path);
+        if (word2id_path.empty()) {
+            LOG_INFO << "word seg cnn_crf model word2id_path empty";
+            return false;
+        }
 
         // 加载词汇表
         bell::GET_XML_CONF_STRING(*iter, "word_embedding_path", "", &word_embedding_path);
@@ -157,6 +164,7 @@ bool CNN_CRF::load(std::string& cnn_config) {
 
     // word2id
     bool is_get_word2id = EigenOp::genWord2id(word2id_path, m_word2id);
+    LOG_INFO << "word2id_path: " << word2id_path.c_str();
     if (!is_get_word2id) {
         LOG_INFO << "word seg cnn_crf model load Word2id failed!!";
     }

@@ -10,6 +10,6 @@ int WordSeg::work(std::string& req) {
     cnn_crf_model.load(config_path);
     std::vector<std::string> input_str_vec;
     spaceString::string2vector(req, input_str_vec);
-    cnn_crf_model.forward(input_str_vec);
+    //cnn_crf_model.forward(input_str_vec);
     return 0;
 }
