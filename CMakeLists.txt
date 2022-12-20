@@ -17,7 +17,7 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
 elseif(CMAKE_BUILD_TYPE STREQUAL "Noop")
   set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS} -g -o0 -fPIC -w -Wl,--export-dynamic -Wno-deprecated -fpermissive")
 else()
-  set(CMAKE_CXX_FLAGS "-lstdc++ -std=c++11 ${CMAKE_CXX_FLAGS} -g -o3 -lxml2 -fPIC -w -Wl,--export-dynamic -Wno-deprecated -fpermissive")
+  set(CMAKE_CXX_FLAGS "-lstdc++ -std=c++11 ${CMAKE_CXX_FLAGS} -g -o3 -fPIC -w -Wl,--export-dynamic -Wno-deprecated -fpermissive")
 endif(CMAKE_BUILD_TYPE STREQUAL "Debug")
 
 message("=================================")
@@ -32,6 +32,7 @@ include_directories(
   "${MUDUO_PATH}"
   "${BELL_ROOT}"
   "${BELL_ROOT}/common"
+  "${BELL_ROOT}/common/config"
   "${BELL_ROOT}/common/eigen"
   "${BELL_ROOT}/common/word_seg_model"
   "${BELL_ROOT}/plugins"
