@@ -6,6 +6,7 @@
 #include <fstream>
 #include <algorithm>
 #include <math.h>
+#include <map>
 
 using namespace Eigen;
     

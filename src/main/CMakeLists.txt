@@ -1,4 +1,4 @@
-add_executable(better_entity_link_server main.cpp entity_link_server.cpp)
+add_executable(better_entity_link_server main.cpp entity_link_server.cpp resource_init.cpp)
 
 # link_directories(
 #     ${MUDUO_PATH}/muduo/muduo

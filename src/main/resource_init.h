@@ -1,6 +1,7 @@
 #pragma once
 
 #include "bell_config.h"
+
 #include <string>
 #include <thread>
 

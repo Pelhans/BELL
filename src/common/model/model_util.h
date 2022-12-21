@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <vector>
+#include "word_seg_model/eigen_utils.h"
 
 using std::string;
 using std::vector;
@@ -15,4 +16,4 @@ public:
 
 };
 
-};
+}

@@ -2,13 +2,14 @@
 #include "model_manager.h"
 #include "model_seg_cnncrf.h"
 #include "muduo/base/Logging.h"
+#include <boost/serialization/singleton.hpp>
 
 using namespace bell_model;
 
 bool ModelUtil::cnncrf_predict(const string& model_name, vector<string>& query, vector<ResultTag>& res) {
-    ModelMgr* mgr = singleton<ModelMgr>::getInstance();
+    auto mgr = boost::serialization::singleton<ModelMgr>::get_const_instance();
     string name = Model::gen_name(zoo::TYPE_CNNCRF, model_name);
-    shared_ptr<ModelSegCNNCRF> model = std::dynamic_pointer_cast<ModelSegCNNCRF>(mgr->get_model(name));
+    shared_ptr<ModelSegCNNCRF> model = std::dynamic_pointer_cast<ModelSegCNNCRF>(mgr.get_model(name));
     if (!model) {
         LOG_ERROR << "ModelUtil::cnncrf_predict model not found, model_name: " << name.c_str();
         return false;

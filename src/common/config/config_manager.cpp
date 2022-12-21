@@ -34,7 +34,7 @@ const BellConfig& ConfigManager::getConfig(const std::string& config_name) const
 
 bool ConfigManager::load_config_mapping(const std::string& mapping_file) {
     if (access(mapping_file.c_str(), R_OK) == -1) {
-        LOG_ERROR << "config file doesn't exist";
+        LOG_ERROR << "config file doesn't exist: " << mapping_file.c_str();
         return false;
     }
 

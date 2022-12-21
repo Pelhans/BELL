@@ -7,6 +7,7 @@
 
 #include "config_manager.h"
 #include "resource_init.h"
+#include <boost/serialization/singleton.hpp>
 
 #include <iostream>
 #include <functional>
@@ -32,12 +33,13 @@ public:
   }
 
   void start(const string& conf_file) {
-    auto config_manager = singleton<ConfigManager>::getInstance();
-    if (!config_manager -> init(conf_file, use_single_config)) {
+    auto config_manager = boost::serialization::singleton<ConfigManager>::get_const_instance();
+    //auto config_manager = ConfigManager();
+    if (!config_manager.init(conf_file, use_single_config)) {
       LOG_ERROR << "fail to init config manager";
-      return false;
+      return;
     }
-    bell_config = config_manager->getDedaultConfig();
+    bell_config = config_manager.getDefaultConfig();
     ResourceInit::async_init(bell_config);
     LOG_INFO << "==== Bell server 0. initServece done";
     ResourceInit::async_init_wait();

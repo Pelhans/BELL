@@ -26,4 +26,4 @@ private:
     std::map<std::string, BellConfig> m_config_map;
 };
 
-};
+}

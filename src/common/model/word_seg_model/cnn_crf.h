@@ -13,10 +13,10 @@ const std::map<int, std::string> label2tag = { {0, "S"},
                                                 {2, "I"},
                                                 {3, "E"}};
 
-class CNN_CRF {
+class CNNCRF {
 public:
-    CNN_CRF() {};
-    ~CNN_CRF() {};
+    CNNCRF() {};
+    ~CNNCRF() {};
 
     bool load(std::string& cnn_config);
     std::vector<ResultTag> forward(std::vector<std::string>& input);

@@ -24,7 +24,7 @@ public:
 class ModelSegCNNCRF : public Model {
 public:
     ModelSegCNNCRF(const string& name, const string& model_file) : Model(name, type(), model_file) {
-        model = std::make_shared<CNN_CRF>();
+        model = std::make_shared<CNNCRF>();
     }
 
     virtual string type() { return zoo::TYPE_CNNCRF; }
@@ -49,6 +49,7 @@ private:
     }
 
 private:
-    shared_ptr<ModelSegCNNCRF> model;
+    shared_ptr<CNNCRF> model;
 };
-};
+
+}

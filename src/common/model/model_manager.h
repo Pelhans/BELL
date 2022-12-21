@@ -14,6 +14,8 @@ namespace bell_model {
 
 class ModelMgr {
 public:
+    ModelMgr() : reg_done(false) {};
+
     shared_ptr<Model> get_model(const string& name) {
         if (reg_done && model_map.find(name) != model_map.end()) {
             return model_map[name];
@@ -47,6 +49,7 @@ public:
 
 private:
     unordered_map<string, shared_ptr<Model>> model_map;
-    std::atomic<bool> reg_done = {false};
+    bool reg_done = false;
 };
-};
+
+}

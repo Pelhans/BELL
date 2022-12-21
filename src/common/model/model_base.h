@@ -3,6 +3,8 @@
 #include <memory>
 #include <vector>
 #include <string>
+#include<sys/time.h>
+#include "muduo/base/Logging.h"
 
 using std::shared_ptr;
 using std::vector;
@@ -11,7 +13,7 @@ using std::string;
 namespace bell_model {
 
 namespace zoo {
-    const static string TYPE_CNNCRF = "CNNCRF"
+    const static string TYPE_CNNCRF = "CNNCRF";
 };
 
 class Input {
@@ -67,9 +69,9 @@ public:
     void start() { gettimeofday(&start_, NULL); }
     void end() {
         gettimeofday(&end_, NULL);
-        cost_ = (int32_t) ((end_.tv_sec - start_.tc_sec) * 1000000 + end_.tv_usec - start_.tv_usec);
+        cost_ = (int32_t) ((end_.tv_sec - start_.tv_sec) * 1000000 + end_.tv_usec - start_.tv_usec);
     }
-    int32_t ucost() { return cost_ };
+    int32_t ucost() { return cost_; };
 
 private:
     int32_t cost_;
@@ -103,7 +105,7 @@ public:
         }
 
         Timer timer;
-        time.start();
+        timer.start();
 
         bool ret = do_predict(input, output);
         if (!ret) {
@@ -111,12 +113,12 @@ public:
         }
 
         timer.end();
-        output->cost_ = time.ucost();
+        output->cost_ = timer.ucost();
         return true;
     }
 
 private:
-    virtual bool do_predict(shared_ptr<Intput>, shared_ptr<Output>& output) = 0;
+    virtual bool do_predict(shared_ptr<Input>& input, shared_ptr<Output>& output) = 0;
 
 protected:
     string name_;
@@ -124,4 +126,4 @@ protected:
     bool is_init_ = false;
 };
 
-};
+}

@@ -12,7 +12,7 @@
 
 using namespace bell;
 
-std::vector<ResultTag> CNN_CRF::forward(std::vector<std::string>& input) {
+std::vector<ResultTag> CNNCRF::forward(std::vector<std::string>& input) {
     std::vector<ResultTag> result_tags;
     int max_len = m_max_len;
     int seq_len = input.size() < max_len ? input.size() : max_len;
@@ -43,7 +43,7 @@ std::vector<ResultTag> CNN_CRF::forward(std::vector<std::string>& input) {
     return result_tags;
 }
 
-bool CNN_CRF::load(std::string& cnn_config) {
+bool CNNCRF::load(std::string& cnn_config) {
     XmlDoc parser;
     XmlNode root = parser.parser(cnn_config.c_str());
 
