@@ -6,8 +6,8 @@
 #include "muduo/net/TcpServer.h"
 
 #include "config_manager.h"
-#include "resource_init.h"
 #include "model_manager.h"
+#include "resource_init.h"
 #include <boost/serialization/singleton.hpp>
 
 #include <functional>
@@ -44,8 +44,10 @@ public:
     LOG_INFO << "==== Bell server 0. initServece done";
     LOG_INFO << "==== Load model ...";
     ResourceInit::async_init_wait();
-    boost::serialization::singleton<bell_model::ModelMgr>::get_const_instance().load_all();
-    boost::serialization::singleton<bell_model::ModelMgr>::get_const_instance().done_reg();
+    boost::serialization::singleton<bell_model::ModelMgr>::get_const_instance()
+        .load_all();
+    boost::serialization::singleton<bell_model::ModelMgr>::get_const_instance()
+        .done_reg();
     LOG_INFO << "==== Bell server start....";
     server_.start();
   }
