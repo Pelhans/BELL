@@ -81,8 +81,8 @@ private:
 
 class Model {
 public:
-    Model(const string& name, const string& type, const string& model_file) {
-        this->name_ = gen_name(type, name);
+    Model(const string& name, const string& model_type, const string& model_file) {
+        this->name_ = gen_name(model_type, name);
         this->model_file_ = model_file;
     }
 
@@ -92,7 +92,7 @@ public:
 
     virtual bool load() = 0;
 
-    static string gen_name(const string& type, const string& name) { return type + "::" + name; }
+    static string gen_name(const string& model_type, const string& name) { return model_type + "::" + name; }
 
     void set_init(bool init) { this->is_init_ = init; }
 

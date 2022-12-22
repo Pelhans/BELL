@@ -40,10 +40,9 @@ public:
       return;
     }
     bell_config = config_manager.getDefaultConfig();
-    ResourceInit::async_init(bell_config);
+    ResourceInit::init(bell_config);
     LOG_INFO << "==== Bell server 0. initServece done";
     LOG_INFO << "==== Load model ...";
-    ResourceInit::async_init_wait();
     boost::serialization::singleton<bell_model::ModelMgr>::get_const_instance()
         .load_all();
     boost::serialization::singleton<bell_model::ModelMgr>::get_const_instance()
