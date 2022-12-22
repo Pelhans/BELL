@@ -44,7 +44,7 @@ void BellConfig::init_global(const XmlNode& global_node) {
 
         if (name == "WordSeg") {
             GET_XML_CONF_STRING(*iter, "word_seg_cnncrf_conf", "", &m_word_seg_model_config);
-            LOG_INFO << "word_seg_cnncrf_conf " << m_word_seg_model_config.c_str();
+            LOG_INFO << "word_seg_cnncrf_conf: " << m_word_seg_model_config.c_str();
         } 
     }
 

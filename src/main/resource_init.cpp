@@ -43,5 +43,4 @@ bool ResourceInit::initWordSeg(const std::string& model_name, const std::string&
     //return singleton<bell_mode::ModelMgr>::getInstance()->reg_model(model)
     auto model_mgr = boost::serialization::singleton<bell_model::ModelMgr>::get_const_instance();
     return model_mgr.reg_model(model);
-    return false;
 }

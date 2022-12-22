@@ -34,7 +34,6 @@ public:
 
   void start(const string& conf_file) {
     auto config_manager = boost::serialization::singleton<ConfigManager>::get_const_instance();
-    //auto config_manager = ConfigManager();
     if (!config_manager.init(conf_file, use_single_config)) {
       LOG_ERROR << "fail to init config manager";
       return;

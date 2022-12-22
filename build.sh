@@ -6,6 +6,7 @@ echo ">>>>>>>> parallel number is ${CPU_CORE_NUM}"
 
 mkdir build;
 cd build/;
-cmake -DCMAKE_BUILD_TYPE="Debug" ..
+#cmake -DCMAKE_BUILD_TYPE="Debug" ..
+cmake -DCMAKE_BUILD_TYPE="" ..
 make;
 cd ../;
