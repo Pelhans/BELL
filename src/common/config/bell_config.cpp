@@ -7,7 +7,7 @@ using namespace bell;
 
 bool BellConfig::init(const std::string& config_file) {
     if (access(config_file.c_str(), R_OK) == -1) {
-        LOG_ERROR << "config file doesn't exist";
+        LOG_ERROR << "config file doesn't exist" << config_file.c_str();
         return false;
     }
 

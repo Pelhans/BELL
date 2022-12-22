@@ -27,7 +27,7 @@ void setLogging(const char* argv0) {
 
 int main(int argc, char* argv[]) {
   setLogging(argv[0]);
-  string conf_file = "deploy/conf/total_conf_base.xml";
+  string conf_file = "/home/pelhans/project/BELL/deploy/conf/total_conf_base.xml";
 
   LOG_INFO << "pid = " << getpid() << ", tid = " << CurrentThread::tid();
   EventLoop loop;

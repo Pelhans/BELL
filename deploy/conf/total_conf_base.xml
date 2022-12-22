@@ -12,5 +12,5 @@
             <word_seg_cnncrf_conf>word_seg_v1.xml</word_seg_cnncrf_conf>
         </entry>
 
-    </node>
+    </global_config>
 </root>
