@@ -56,7 +56,7 @@ fnnConnectLayer EigenOp::loadFullConnectParam(std::string& path, int in_channels
 }
 
 Eigen::MatrixXf EigenOp::crfTransistionParam(std::string& path, int tag_size) {
-    MatrixXf crf_transistion_layer;
+    MatrixXf crf_transistion_layer(tag_size, tag_size);
     bool is_get_weight = ReadData(path, tag_size, tag_size, crf_transistion_layer);
     if (!is_get_weight) {
         LOG_ERROR << "load word seg cnn_crf crf param failed";

@@ -202,33 +202,51 @@ bool CNNCRF::load(std::string &cnn_config) {
            << " , cols: " << std::to_string(m_embedding.cols()).c_str();
 
   // CNN
+  LOG_INFO << "开始加载 CNN 部分";
   m_conv_layer_1_1 =
       EigenOp::loadConv1dParam(convs_layer_1_1_path, m_emb_dim, 20, 1);
+  LOG_INFO << "加载....";
   m_conv_layer_1_3 =
-      EigenOp::loadConv1dParam(convs_layer_1_3_path, m_emb_dim, 20, 1);
+      EigenOp::loadConv1dParam(convs_layer_1_3_path, m_emb_dim, 20, 3);
+  LOG_INFO << "加载....";
   m_conv_layer_1_5 =
-      EigenOp::loadConv1dParam(convs_layer_1_5_path, m_emb_dim, 20, 1);
-
+      EigenOp::loadConv1dParam(convs_layer_1_5_path, m_emb_dim, 20, 5);
+  
+  LOG_INFO << "加载....";
   m_conv_layer_2_3 =
-      EigenOp::loadConv1dParam(convs_layer_2_3_path, m_emb_dim, 20, 1);
+      EigenOp::loadConv1dParam(convs_layer_2_3_path, m_emb_dim, 20, 3);
+  LOG_INFO << "加载....";
   m_conv_layer_2_5 =
-      EigenOp::loadConv1dParam(convs_layer_2_5_path, m_emb_dim, 20, 1);
+      EigenOp::loadConv1dParam(convs_layer_2_5_path, m_emb_dim, 20, 5);
+  LOG_INFO << "加载....";
   m_conv_layer_2_7 =
-      EigenOp::loadConv1dParam(convs_layer_2_7_path, m_emb_dim, 20, 1);
+      EigenOp::loadConv1dParam(convs_layer_2_7_path, m_emb_dim, 20, 7);
+  LOG_INFO << "加载....";
 
   m_conv_layer_3_1 =
       EigenOp::loadConv1dParam(convs_layer_3_1_path, m_emb_dim, 20, 1);
+  LOG_INFO << "加载....";
   m_conv_layer_3_3 =
-      EigenOp::loadConv1dParam(convs_layer_3_3_path, m_emb_dim, 20, 1);
+      EigenOp::loadConv1dParam(convs_layer_3_3_path, m_emb_dim, 20, 3);
+  LOG_INFO << "加载....";
   m_conv_layer_3_5 =
-      EigenOp::loadConv1dParam(convs_layer_3_5_path, m_emb_dim, 20, 1);
+      EigenOp::loadConv1dParam(convs_layer_3_5_path, m_emb_dim, 20, 5);
+  LOG_INFO << "加载....";
 
   // fc
   m_fc_0_layer = EigenOp::loadFullConnectParam(fc_layer_0_prefix, 60, 60);
-  m_fc_1_layer = EigenOp::loadFullConnectParam(fc_layer_1_prefix, 60, 60);
+  LOG_INFO << "加载....";
+  m_fc_1_layer = EigenOp::loadFullConnectParam(fc_layer_1_prefix, 60, 4);
+  LOG_INFO << "加载....";
 
   // crf
+  if (access(crf_path.c_str(), R_OK) == -1) {
+    LOG_ERROR << "crf_path file doesn't exist: " << crf_path.c_str();
+    return false;
+  }
+  LOG_INFO << "m_tag_size: " << m_tag_size;
   m_crf_transistion_layer = EigenOp::crfTransistionParam(crf_path, m_tag_size);
+  LOG_INFO << "加载....";
 
   return true;
 }
