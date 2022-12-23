@@ -51,5 +51,7 @@ bool ResourceInit::initWordSeg(const std::string &model_name,
   auto model =
       std::make_shared<bell_model::ModelSegCNNCRF>(model_name, cnn_crf_config);
   LOG_INFO << "模型指针创建完成";
-  return boost::serialization::singleton<bell_model::ModelMgr>::get_const_instance().reg_model(model);
+  return boost::serialization::singleton<
+             bell_model::ModelMgr>::get_const_instance()
+      .reg_model(model);
 }
