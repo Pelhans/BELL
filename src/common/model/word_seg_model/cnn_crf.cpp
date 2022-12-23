@@ -12,28 +12,21 @@
 using namespace bell;
 
 std::vector<ResultTag> CNNCRF::forward(std::vector<std::string> &input) {
-  LOG_INFO << "开始 CNNCRF->forawrd, input.size(): " << input.size();
   std::vector<ResultTag> result_tags;
   int max_len = m_max_len;
+  m_nbest = 1;
+  m_decode_type = "crf";
   int seq_len = input.size() < max_len ? input.size() : max_len;
   if (seq_len <= 1) {
     return result_tags;
   }
-  LOG_INFO << "到这啦";
 
   EigenOp::padding(input, max_len, "[PAD]");
-  LOG_INFO << "pad 完成, input.size(): " << input.size();
   MatrixXf emb_input =
       EigenOp::Embedding(input, m_word2id, m_embedding, m_emb_dim);
-  LOG_INFO << "word seg cnn_crf emb_input row "
-           << std::to_string(emb_input.rows()).c_str()
-           << " , cols: " << std::to_string(emb_input.cols()).c_str();
 
   MatrixXf conv1d_layer_1_out = EigenOp::multi_kernel_conv1d(
       emb_input, m_conv_layer_1_1, m_conv_layer_1_3, m_conv_layer_1_5, "relu");
-  LOG_INFO << "word seg cnn_crf conv1d_layer_1_out row "
-           << std::to_string(conv1d_layer_1_out.rows()).c_str()
-           << " , cols: " << std::to_string(conv1d_layer_1_out.cols()).c_str();
   MatrixXf conv1d_layer_2_out =
       EigenOp::multi_kernel_conv1d(conv1d_layer_1_out, m_conv_layer_2_3,
                                    m_conv_layer_2_5, m_conv_layer_2_7, "relu");
@@ -73,7 +66,6 @@ bool CNNCRF::load(std::string &cnn_config) {
     LOG_INFO << "Faild to get root node, conf file:" << cnn_config.c_str();
     return false;
   }
-  LOG_INFO << "开始加载模型文件 ";
   auto node_list = bell::GET_XML_CONF_LIST(root, "node");
 
   std::string model_dir, word2id_path, word_embedding_path;
@@ -87,10 +79,9 @@ bool CNNCRF::load(std::string &cnn_config) {
     // 加载文件路径
     bell::GET_XML_CONF_STRING(*iter, "model_dir", "", &model_dir);
     if (model_dir.empty()) {
-      LOG_INFO << "word seg cnn_crf model model_dir empty";
+      LOG_ERROR << "word seg cnn_crf model model_dir empty";
       return false;
     }
-    LOG_INFO << "模型目录为: " << model_dir.c_str();
 
     // 参数
     bell::GET_XML_CONF_INT(*iter, "vocab_size", 22200, &m_vocab_size);
@@ -211,51 +202,36 @@ bool CNNCRF::load(std::string &cnn_config) {
            << " , cols: " << std::to_string(m_embedding.cols()).c_str();
 
   // CNN
-  LOG_INFO << "开始加载 CNN 部分";
   m_conv_layer_1_1 =
       EigenOp::loadConv1dParam(convs_layer_1_1_path, m_emb_dim, 20, 1);
-  LOG_INFO << "加载....";
   m_conv_layer_1_3 =
       EigenOp::loadConv1dParam(convs_layer_1_3_path, m_emb_dim, 20, 3);
-  LOG_INFO << "加载....";
   m_conv_layer_1_5 =
       EigenOp::loadConv1dParam(convs_layer_1_5_path, m_emb_dim, 20, 5);
 
-  LOG_INFO << "加载....";
   m_conv_layer_2_3 =
       EigenOp::loadConv1dParam(convs_layer_2_3_path, m_emb_dim, 20, 3);
-  LOG_INFO << "加载....";
   m_conv_layer_2_5 =
       EigenOp::loadConv1dParam(convs_layer_2_5_path, m_emb_dim, 20, 5);
-  LOG_INFO << "加载....";
   m_conv_layer_2_7 =
       EigenOp::loadConv1dParam(convs_layer_2_7_path, m_emb_dim, 20, 7);
-  LOG_INFO << "加载....";
 
   m_conv_layer_3_1 =
       EigenOp::loadConv1dParam(convs_layer_3_1_path, m_emb_dim, 20, 1);
-  LOG_INFO << "加载....";
   m_conv_layer_3_3 =
       EigenOp::loadConv1dParam(convs_layer_3_3_path, m_emb_dim, 20, 3);
-  LOG_INFO << "加载....";
   m_conv_layer_3_5 =
       EigenOp::loadConv1dParam(convs_layer_3_5_path, m_emb_dim, 20, 5);
-  LOG_INFO << "加载....";
 
   // fc
   m_fc_0_layer = EigenOp::loadFullConnectParam(fc_layer_0_prefix, 60, 60);
-  LOG_INFO << "加载....";
   m_fc_1_layer = EigenOp::loadFullConnectParam(fc_layer_1_prefix, 60, 4);
-  LOG_INFO << "加载....";
 
   // crf
   if (access(crf_path.c_str(), R_OK) == -1) {
     LOG_ERROR << "crf_path file doesn't exist: " << crf_path.c_str();
     return false;
   }
-  LOG_INFO << "m_tag_size: " << m_tag_size;
   m_crf_transistion_layer = EigenOp::crfTransistionParam(crf_path, m_tag_size);
-  LOG_INFO << "加载....";
-
   return true;
 }

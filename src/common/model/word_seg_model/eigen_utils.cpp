@@ -159,9 +159,9 @@ MatrixXf EigenOp::Linear(MatrixXf &input, fnnConnectLayer &fc,
   MatrixXf output = input * fc.weight;
   output.rowwise() += fc.bias.transpose();
   if (active == "relu") {
-    output = relu(output);
+    relu(output);
   } else if (active == "tanh") {
-    output = ctanh(output);
+    ctanh(output);
   }
   return output;
 }
@@ -169,17 +169,13 @@ MatrixXf EigenOp::Linear(MatrixXf &input, fnnConnectLayer &fc,
 MatrixXf EigenOp::Conv1d(MatrixXf &input, conv1DLayer &conv,
                          std::string active) {
   MatrixXf input_2_col = EigenOp::im2col(input, conv.kernel_size);
-  LOG_INFO << "im2col done., rows()" << input_2_col.rows() << " cols: " << input_2_col.cols();
-  LOG_INFO << "conv.weight., rows()" << conv.weight.rows() << " cols: " << conv.weight.cols();
   MatrixXf output = input_2_col * conv.weight;
-  LOG_INFO << "output., rows()" << output.rows() << " cols: " << output.cols();
-  LOG_INFO << "conv.bias., rows()" << conv.bias.rows() << " cols: " << conv.bias.cols() ;
   output.rowwise() += conv.bias.transpose();
 
   if (active == "relu") {
-    output = relu(output);
+    relu(output);
   } else if (active == "tanh") {
-    output = ctanh(output);
+    ctanh(output);
   } else {
     LOG_ERROR << "word seg cnn_crf model conv1d active func not exist: "
               << active.c_str();
@@ -190,17 +186,7 @@ MatrixXf EigenOp::Conv1d(MatrixXf &input, conv1DLayer &conv,
 MatrixXf EigenOp::multi_kernel_conv1d(MatrixXf &emb_input, conv1DLayer &layer1,
                                       conv1DLayer &layer2, conv1DLayer &layer3,
                                       const std::string active) {
-  LOG_INFO << "multi_kernel_conv1d layer1 row "
-           << std::to_string(layer1.weight.rows()).c_str()
-           << " , cols: " << std::to_string(layer1.weight.cols()).c_str();
-  LOG_INFO << "multi_kernel_conv1d layer2 row "
-           << std::to_string(layer2.weight.rows()).c_str()
-           << " , cols: " << std::to_string(layer2.weight.cols()).c_str();
-  LOG_INFO << "multi_kernel_conv1d layer3 row "
-           << std::to_string(layer3.weight.rows()).c_str()
-           << " , cols: " << std::to_string(layer3.weight.cols()).c_str();
   MatrixXf conv11_input = Conv1d(emb_input, layer1, "relu");
-  LOG_INFO << "蛤蛤";
   MatrixXf conv13_input = Conv1d(emb_input, layer2, "relu");
   MatrixXf conv15_input = Conv1d(emb_input, layer3, "relu");
 
@@ -211,16 +197,15 @@ MatrixXf EigenOp::multi_kernel_conv1d(MatrixXf &emb_input, conv1DLayer &layer1,
   return out_input;
 }
 
-MatrixXf EigenOp::ctanh(MatrixXf &output) {
+void EigenOp::ctanh(MatrixXf &output) {
   for (int i = 0; i < output.rows(); ++i) {
     for (int j = 0; j < output.cols(); ++j) {
       output(i, j) = std::tanh(output(i, j));
     }
   }
-  return output;
 }
 
-MatrixXf EigenOp::relu(MatrixXf &output) {
+void EigenOp::relu(MatrixXf &output) {
   for (int i = 0; i < output.rows(); ++i) {
     for (int j = 0; j < output.cols(); ++j) {
       if (output(i, j) < 0) {
@@ -361,7 +346,7 @@ EigenOp::viterbi_decode(Eigen::MatrixXf &input, int seq_len, int tag_size,
   }
 
   std::vector<Eigen::VectorXf> partition_history;
-  Eigen::MatrixXi back_points = Eigen::VectorXi::Zero(seq_len, tag_size);
+  Eigen::MatrixXi back_points = Eigen::MatrixXi::Zero(seq_len, tag_size);
   Eigen::VectorXi indexs = Eigen::VectorXi::Zero(tag_size);
   Eigen::VectorXf partition = scores[0].row(tag_size - 2);
   partition_history.push_back(partition);

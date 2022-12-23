@@ -32,8 +32,8 @@ public:
     ~EigenOp() {};
 
     // NN module
-    static MatrixXf relu(MatrixXf& output);
-    static MatrixXf ctanh(MatrixXf& output);
+    static void relu(MatrixXf& output);
+    static void ctanh(MatrixXf& output);
     static bool softmax(Eigen::VectorXf& input_vector);
     static bool softmax(MatrixXf& matrix, MatrixXf& out, int dim);
 

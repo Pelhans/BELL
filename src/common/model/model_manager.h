@@ -28,7 +28,6 @@ public:
       return false;
     }
     string name = model->name();
-    LOG_INFO << "reg_model..., model name: " << name.c_str();
     if (reg_done || model_map.find(name) != model_map.end()) {
       return false;
     }
@@ -38,16 +37,11 @@ public:
   }
 
   void load_all() {
-    LOG_INFO << "load_all...";
-    LOG_INFO << "model_map.size() : " << model_map.size();
     for (auto it : model_map) {
-      LOG_INFO << "开始 Load 模型...";
       if (!it.second->load()) {
         LOG_ERROR << "ModelMgr load model failed, model name = "
                   << it.second->name().c_str();
       } else {
-        LOG_INFO << "ModelMgr load model  cur_name = "
-                 << it.second->name().c_str();
         it.second->set_init(true);
       }
     }
