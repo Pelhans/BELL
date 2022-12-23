@@ -12,19 +12,28 @@
 using namespace bell;
 
 std::vector<ResultTag> CNNCRF::forward(std::vector<std::string> &input) {
+  LOG_INFO << "开始 CNNCRF->forawrd, input.size(): " << input.size();
   std::vector<ResultTag> result_tags;
   int max_len = m_max_len;
   int seq_len = input.size() < max_len ? input.size() : max_len;
   if (seq_len <= 1) {
     return result_tags;
   }
+  LOG_INFO << "到这啦";
 
   EigenOp::padding(input, max_len, "[PAD]");
+  LOG_INFO << "pad 完成, input.size(): " << input.size();
   MatrixXf emb_input =
       EigenOp::Embedding(input, m_word2id, m_embedding, m_emb_dim);
+  LOG_INFO << "word seg cnn_crf emb_input row "
+           << std::to_string(emb_input.rows()).c_str()
+           << " , cols: " << std::to_string(emb_input.cols()).c_str();
 
   MatrixXf conv1d_layer_1_out = EigenOp::multi_kernel_conv1d(
       emb_input, m_conv_layer_1_1, m_conv_layer_1_3, m_conv_layer_1_5, "relu");
+  LOG_INFO << "word seg cnn_crf conv1d_layer_1_out row "
+           << std::to_string(conv1d_layer_1_out.rows()).c_str()
+           << " , cols: " << std::to_string(conv1d_layer_1_out.cols()).c_str();
   MatrixXf conv1d_layer_2_out =
       EigenOp::multi_kernel_conv1d(conv1d_layer_1_out, m_conv_layer_2_3,
                                    m_conv_layer_2_5, m_conv_layer_2_7, "relu");
@@ -211,7 +220,7 @@ bool CNNCRF::load(std::string &cnn_config) {
   LOG_INFO << "加载....";
   m_conv_layer_1_5 =
       EigenOp::loadConv1dParam(convs_layer_1_5_path, m_emb_dim, 20, 5);
-  
+
   LOG_INFO << "加载....";
   m_conv_layer_2_3 =
       EigenOp::loadConv1dParam(convs_layer_2_3_path, m_emb_dim, 20, 3);

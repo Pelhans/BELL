@@ -11,7 +11,7 @@ int WordSeg::work(std::string &req) {
   std::vector<std::string> input_str_vec;
   spaceString::string2vector(req, input_str_vec);
   LOG_INFO << "开始跑模型了";
-  // bell_model::ModelUtil::cnncrf_predict("word_seg_cnn_crf", input_str_vec,
-  // tag_res);
+  bell_model::ModelUtil::cnncrf_predict("word_seg_cnn_crf", input_str_vec,
+  tag_res);
   return 0;
 }
