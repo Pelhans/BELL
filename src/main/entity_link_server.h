@@ -8,7 +8,6 @@
 #include "config_manager.h"
 #include "model_manager.h"
 #include "resource_init.h"
-#include <boost/serialization/singleton.hpp>
 
 #include <functional>
 #include <iostream>
@@ -32,24 +31,7 @@ public:
         std::bind(&BELLServer::onMessage, this, _1, _2, _3));
   }
 
-  void start(const string &conf_file) {
-    auto config_manager =
-        boost::serialization::singleton<ConfigManager>::get_const_instance();
-    if (!config_manager.init(conf_file, use_single_config)) {
-      LOG_ERROR << "fail to init config manager";
-      return;
-    }
-    bell_config = config_manager.getDefaultConfig();
-    ResourceInit::init(bell_config);
-    LOG_INFO << "==== Bell server 0. initServece done";
-    LOG_INFO << "==== Load model ...";
-    boost::serialization::singleton<bell_model::ModelMgr>::get_const_instance()
-        .load_all();
-    boost::serialization::singleton<bell_model::ModelMgr>::get_const_instance()
-        .done_reg();
-    LOG_INFO << "==== Bell server start....";
-    server_.start();
-  }
+  void start(const string &conf_file);
 
 private:
   void onConnection(const TcpConnectionPtr &conn);

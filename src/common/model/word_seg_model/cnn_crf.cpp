@@ -44,6 +44,10 @@ std::vector<ResultTag> CNNCRF::forward(std::vector<std::string>& input) {
 }
 
 bool CNNCRF::load(std::string& cnn_config) {
+    if (access(cnn_config.c_str(), R_OK) == -1) {
+        LOG_ERROR << "config file doesn't exist: " << cnn_config.c_str();
+        return false;
+    }
     XmlDoc parser;
     XmlNode root = parser.parser(cnn_config.c_str());
 

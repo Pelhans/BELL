@@ -56,7 +56,7 @@ int main(int argc, char *argv[]) {
   LOG_INFO << "pid = " << getpid() << ", tid = " << CurrentThread::tid();
   LOG_INFO << "conf_file path: " << conf_file.c_str();
   EventLoop loop;
-  InetAddress listenAddr(2022);
+  InetAddress listenAddr(2023);
   BELLServer server(&loop, listenAddr);
 
   server.start(conf_file);

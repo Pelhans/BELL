@@ -4,13 +4,13 @@
         <entry>
             <!--Server 整体配置-->
             <key>ConfServConfig</key>
-            <value>bell_server.conf</value>
+            <value>./deploy/conf/bell_server.conf</value>
         </entry>
 
         <entry>
             <!--模型文件读取相关配置-->
             <key>WordSeg</key>
-            <word_seg_cnncrf_conf>word_seg_v1.xml</word_seg_cnncrf_conf>
+            <word_seg_cnncrf_conf>./deploy/conf/word_seg_v1.xml</word_seg_cnncrf_conf>
         </entry>
 
     </global_config>
