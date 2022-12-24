@@ -119,6 +119,7 @@ public:
 
     timer.end();
     output->cost_ = timer.ucost();
+    LOG_INFO << "==== model predict cost: " << output->cost_ << "us";
     return true;
   }
 

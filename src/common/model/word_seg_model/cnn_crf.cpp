@@ -16,6 +16,8 @@ std::vector<ResultTag> CNNCRF::forward(std::vector<std::string> &input) {
   int max_len = m_max_len;
   m_nbest = 1;
   m_decode_type = "crf";
+  input.insert(input.begin(), "[CLS]");
+  input.push_back("[SEP]");
   int seq_len = input.size() < max_len ? input.size() : max_len;
   if (seq_len <= 1) {
     return result_tags;

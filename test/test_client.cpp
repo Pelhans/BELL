@@ -7,10 +7,11 @@
 #define PORT 2023
 using namespace std;
 
-int main() {
+int main(int argc, char *argv[]) {
     int sockFd = 0;
     char buffer[1024] = {0};
-    char* helloFromClient = "hello from client";
+    //char* helloFromClient = "hello from client";
+    char* helloFromClient = argv[1];
     struct sockaddr_in address;
     address.sin_family = AF_INET;
     inet_pton(AF_INET, "127.0.0.1", &address.sin_addr.s_addr);

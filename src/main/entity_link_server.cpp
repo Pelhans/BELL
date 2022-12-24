@@ -16,8 +16,11 @@ void BELLServer::onConnection(const TcpConnectionPtr &conn) {
 void BELLServer::onMessage(const TcpConnectionPtr &conn, Buffer *buf,
                            Timestamp time) {
   string msg(buf->retrieveAllAsString());
+  // 功能逻辑在这里开始写
   WordSeg word_seg_handler;
   word_seg_handler.work(msg);
+
+  // 功能逻辑结束
   LOG_TRACE << conn->name() << " recv " << msg.size() << " bytes at "
             << time.toString();
   conn->send(msg);
