@@ -23,23 +23,62 @@ int WordSeg::work(std::shared_ptr<bell::Event> bevent) {
     spaceString::string2vector(origin_query, input_str_vec);
     bell_model::ModelUtil::cnncrf_predict("word_seg_cnn_crf", input_str_vec,
                                           tag_res);
+    decode(seg_output, input_str_vec, tag_res);
 
     return BELL_SUCESS;
 }
 
 int WordSeg::decode(bell::event::SegResOutput &seg_output,
-                    std::vector<std::string> input_str_vec,
-                    vector<ResultTag> tag_res) {
-    if (input_str_vec.size() <= 2) {
+                    std::vector<std::string> &input_str_vec,
+                    std::vector<ResultTag> &tag_res) {
+    if (tag_res.size() < 1) {
         return BELL_FAIL;
     }
 
-    for (int i = 0; i < tag_res.size(); ++i) {
-        LOG_INFO << "tag_res[i]: "
-                 << "对应的tag大小: " << tag_res[i].tags.size();
-        for (int j = 0; j < input_str_vec.size(); ++j) {
-            LOG_INFO << "input_str_vec[i]: " << input_str_vec[j]
-                     << " , 对应的tag大小: " << tag_res[i].tags[j + 1].c_str();
+    LOG_INFO << "tag_res[0].tags.size(): " << tag_res[0].tags.size();
+    LOG_INFO << "input_str_vec.size(): " << input_str_vec.size();
+
+    if (tag_res[0].tags.size() != (input_str_vec.size() + 2)) {
+        LOG_ERROR << "word seg tag length != input str length";
+        return BELL_FAIL;
+    }
+
+    bell::types::NerPath ner_path;
+    ner_path.score = tag_res[0].prob;
+    std::vector<bell::types::Entity> &ner_list = ner_path.ner_list;
+
+    string pre_text;
+    int pre_term_begin = 0;
+    for (int i = 0; i < input_str_vec.size(); ++i) {
+        string &cur_tag_str = tag_res[0].tags[i + 1];
+        string &cur_str = input_str_vec[i];
+        if (cur_tag_str == "S" || cur_tag_str == "B") {
+            if (!pre_text.empty()) {
+                bell::types::Entity entity;
+                entity.text = pre_text;
+                entity.term_begin = pre_term_begin;
+                entity.term_end = i - 1;
+                pre_text = "";
+                ner_list.push_back(entity);
+            }
+            // if (cur_tag_str == "B") {
+
+            // }
+            pre_term_begin = i;
+            pre_text += input_str_vec[i];
+        } else if (cur_tag_str == "E" || cur_tag_str == "I") {
+            pre_text += input_str_vec[i];
         }
     }
+    if (!pre_text.empty()) {
+        bell::types::Entity entity;
+        entity.text = pre_text;
+        entity.term_begin = pre_term_begin;
+        entity.term_end = input_str_vec.size() - 1;
+        pre_text = "";
+        ner_list.push_back(entity);
+    }
+
+    seg_output.seg_tag_list.push_back(ner_path);
+    return BELL_SUCESS;
 }

@@ -10,6 +10,7 @@
 #include "resource_init.h"
 
 #include "common/event/bell_handler_event.h"
+#include "common/util/base_define.h"
 
 #include <functional>
 #include <iostream>
@@ -36,7 +37,7 @@ public:
 
     void start(const string &conf_file);
 
-    void executer(std::shared_ptr<bell::Event> bevent);
+    int executer(std::shared_ptr<bell::Event> bevent);
 
 private:
     void onConnection(const TcpConnectionPtr &conn);

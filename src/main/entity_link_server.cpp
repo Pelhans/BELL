@@ -25,9 +25,19 @@ void BELLServer::onMessage(const TcpConnectionPtr &conn, Buffer *buf,
     conn->send(msg);
 }
 
-void BELLServer::executer(std::shared_ptr<bell::Event> bevent) {
+int BELLServer::executer(std::shared_ptr<bell::Event> bevent) {
+    CHECK_NULL(bevent, BELL_FAIL);
     WordSeg word_seg_handler;
     word_seg_handler.work(bevent);
+
+    bell::event::SegResOutput &seg_output = bevent->seg_output;
+    auto &ner_list = seg_output.seg_tag_list[0].ner_list;
+    for (auto &entity : ner_list) {
+        LOG_INFO << "entity.text: " << entity.text.c_str()
+                 << " , term_begin: " << entity.term_begin
+                 << " , term_end: " << entity.term_end;
+    }
+    return BELL_SUCESS;
 }
 
 void BELLServer::start(const string &conf_file) {

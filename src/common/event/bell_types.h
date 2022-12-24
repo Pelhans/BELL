@@ -1,6 +1,5 @@
 #pragma once
 
-#include "base_signal_output.h"
 #include <vector>
 #include <string>
 #include <map>
@@ -25,11 +24,9 @@ typedef struct _EntityNode__isset {
 
 class EntityNode {
 public:
-    EntityNode(const EntityNode&);
-    EntityNode& operator=(const EntityNode&);
-    EntityNode() : type(0), type_name(0), score(0), entity_id() {}
+    EntityNode() : type(0), type_name(), score(0), entity_id() {}
+    ~EntityNode() {}
 
-    virtual ~EntityNode() throw();
     int32_t type;
     std::string type_name;
     double score;
@@ -75,11 +72,9 @@ typedef struct _Entity__isset {
 
 class Entity {
 public:
-    Entity(const Entity&);
-    Entity& operator=(const Entity&);
-    Entity() : text(0), term_begin(0), term_end() {}
+    Entity() : text(), term_begin(0), term_end(0) {}
+    ~Entity(){};
 
-    virtual ~Entity() throw();
     std::string text;
     int32_t term_begin;
     int32_t term_end;
@@ -121,11 +116,9 @@ typedef struct _NerPath__isset {
 
 class NerPath {
 public:
-    NerPath(const NerPath&);
-    NerPath& operator=(const NerPath&);
     NerPath() : score(0), status(0) {}
+    ~NerPath() {}
 
-    virtual ~NerPath() throw();
     std::vector<Entity> ner_list;
     double score;
     std::map<std::string, std::string> ex_data;
