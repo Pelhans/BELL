@@ -16,14 +16,18 @@ void BELLServer::onConnection(const TcpConnectionPtr &conn) {
 void BELLServer::onMessage(const TcpConnectionPtr &conn, Buffer *buf,
                            Timestamp time) {
   string msg(buf->retrieveAllAsString());
-  // 功能逻辑在这里开始写
-  WordSeg word_seg_handler;
-  word_seg_handler.work(msg);
-
-  // 功能逻辑结束
+  auto bevent = std::make_shared<bell::Event>();
+  bevent->req.origin_query = msg;
+  // 功能逻辑在这写
+  executer(bevent);
   LOG_TRACE << conn->name() << " recv " << msg.size() << " bytes at "
             << time.toString();
   conn->send(msg);
+}
+
+void BELLServer::executer(std::shared_ptr<bell::Event> bevent) {
+  WordSeg word_seg_handler;
+  word_seg_handler.work(bevent);
 }
 
 void BELLServer::start(const string &conf_file) {

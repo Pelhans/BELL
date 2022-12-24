@@ -9,6 +9,8 @@
 #include "model_manager.h"
 #include "resource_init.h"
 
+#include "common/event/bell_handler_event.h"
+
 #include <functional>
 #include <iostream>
 #include <utility>
@@ -32,6 +34,8 @@ public:
   }
 
   void start(const string &conf_file);
+
+  void executer(std::shared_ptr<bell::Event> bevent);
 
 private:
   void onConnection(const TcpConnectionPtr &conn);
