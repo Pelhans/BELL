@@ -8,12 +8,15 @@
 
 namespace spaceString {
 
-const std::vector<std::string> punctuations = {"~", "!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "_", "+"
-,"=", "-", "`", "{", "}", "[", "]", "|", "\"", ";", "'", "<", ">", "?", "/", ".", "`", "！", "￥", "……", "（", "）", "—", "、",
-"【", "】", "；", "‘", "：", "“", "《", "》", "，", "。", "？", "·",};
+const std::vector<std::string> punctuations = {
+    "~",  "!", "@",  "#", "$",  "%",  "^",  "&",  "*",  "(", ")",  "_",  "+",
+    "=",  "-", "`",  "{", "}",  "[",  "]",  "|",  "\"", ";", "'",  "<",  ">",
+    "?",  "/", ".",  "`", "！", "￥", "……", "（", "）", "—", "、", "【", "】",
+    "；", "‘", "：", "“", "《", "》", "，", "。", "？", "·",
+};
 
 inline int string2vector(const std::string& text, std::vector<std::string>& v) {
-    for (size_t i=0; i<text.length();) {
+    for (size_t i = 0; i < text.length();) {
         size_t cplen = 1;
         if ((text[i] & 0xf8) == 0xf0)
             cplen = 4;
@@ -21,7 +24,7 @@ inline int string2vector(const std::string& text, std::vector<std::string>& v) {
             cplen = 3;
         else if ((text[i] & 0xe0) == 0xc0)
             cplen = 2;
-        if ((i+cplen) > text.length()) cplen = 1;
+        if ((i + cplen) > text.length()) cplen = 1;
 
         v.push_back(text.substr(i, cplen));
         i += cplen;
@@ -30,7 +33,7 @@ inline int string2vector(const std::string& text, std::vector<std::string>& v) {
 }
 
 inline int vector2map(std::map<std::string, int>& m) {
-    for (int i=0; i< punctuations.size(); i++) {
+    for (int i = 0; i < punctuations.size(); i++) {
         std::string p = punctuations[i];
         m[p] = 1;
     }
@@ -47,7 +50,7 @@ inline std::string query_norm(std::string query) {
     if (vec.size() > 0) {
         std::map<std::string, int> puncs;
         vector2map(puncs);
-        for (int i=0; i<vec.size(); ++i) {
+        for (int i = 0; i < vec.size(); ++i) {
             if (puncs.find(vec[i]) != puncs.end()) {
                 continue;
             } else {
@@ -60,4 +63,4 @@ inline std::string query_norm(std::string query) {
     }
 }
 
-};
+}; // namespace spaceString

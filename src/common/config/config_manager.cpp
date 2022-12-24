@@ -9,7 +9,8 @@ using namespace std;
 
 static const std::string DEFAULT_CONFIG_NAME = "default";
 
-bool ConfigManager::init(const std::string& config_file, bool use_singel_config) {
+bool ConfigManager::init(const std::string& config_file,
+                         bool use_singel_config) {
     m_config_file = config_file;
     m_use_single_config = false;
     m_has_init = true;
@@ -21,9 +22,12 @@ bool ConfigManager::init(const std::string& config_file, bool use_singel_config)
     }
 }
 
-const BellConfig& ConfigManager::getDefaultConfig() const { return m_base_config; }
+const BellConfig& ConfigManager::getDefaultConfig() const {
+    return m_base_config;
+}
 
-const BellConfig& ConfigManager::getConfig(const std::string& config_name) const {
+const BellConfig& ConfigManager::getConfig(
+    const std::string& config_name) const {
     auto iter = m_config_map.find(config_name);
     if (iter == m_config_map.end()) {
         LOG_ERROR << "unknown config name " << config_name.c_str();
@@ -45,7 +49,8 @@ bool ConfigManager::load_config_mapping(const std::string& mapping_file) {
     GET_XML_CONF_STRING(root, "default_config", "", &default_config_file);
     BellConfig config;
     if (!config.init(default_config_file)) {
-        LOG_ERROR << "fail to init default config file" << default_config_file.c_str();
+        LOG_ERROR << "fail to init default config file"
+                  << default_config_file.c_str();
         return false;
     }
     m_base_config = config;

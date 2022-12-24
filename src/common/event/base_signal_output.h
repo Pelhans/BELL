@@ -5,7 +5,7 @@
 namespace bell {
 namespace event {
 
-class BaseSignalOutput{
+class BaseSignalOutput {
 public:
     BaseSignalOutput() {}
     virtual ~BaseSignalOutput() {}
@@ -17,5 +17,5 @@ private:
     std::string m_name;
 };
 
-}
-}
+} // namespace event
+} // namespace bell

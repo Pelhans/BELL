@@ -12,11 +12,15 @@ namespace bell {
 namespace types {
 
 typedef struct _EntityNode__isset {
-    _EntityNode__isset() : type_name(false), score(false), entity_id(false), attr(false) {}
-    bool type_name:1;
-    bool score:1;
-    bool entity_id:1;
-    bool attr:1;
+    _EntityNode__isset()
+        : type_name(false),
+          score(false),
+          entity_id(false),
+          attr(false) {}
+    bool type_name : 1;
+    bool score : 1;
+    bool entity_id : 1;
+    bool attr : 1;
 } _EntityNode__isset;
 
 class EntityNode {
@@ -34,7 +38,7 @@ public:
 
     _EntityNode__isset __isset;
 
-    bool operator == (const EntityNode& rhs) const {
+    bool operator==(const EntityNode& rhs) const {
         if (!(type == rhs.type)) {
             return false;
         }
@@ -61,14 +65,12 @@ public:
         return true;
     }
 
-    bool operator != (const EntityNode& rhs) const {
-        return !(*this == rhs);
-    }
+    bool operator!=(const EntityNode& rhs) const { return !(*this == rhs); }
 };
 
 typedef struct _Entity__isset {
     _Entity__isset() : ex_data(false) {}
-    bool ex_data:1;
+    bool ex_data : 1;
 } _Entity__isset;
 
 class Entity {
@@ -86,7 +88,7 @@ public:
 
     _Entity__isset __isset;
 
-    bool operator == (const Entity& rhs) const {
+    bool operator==(const Entity& rhs) const {
         if (!(text == rhs.text)) {
             return false;
         }
@@ -107,16 +109,14 @@ public:
         return true;
     }
 
-    bool operator != (const Entity& rhs) const {
-        return !(*this == rhs);
-    }
+    bool operator!=(const Entity& rhs) const { return !(*this == rhs); }
 };
 
 typedef struct _NerPath__isset {
     _NerPath__isset() : score(false), ex_data(false), status(false) {}
-    bool score:1;
-    bool ex_data:1;
-    bool status:1;
+    bool score : 1;
+    bool ex_data : 1;
+    bool status : 1;
 } NerPath__isset;
 
 class NerPath {
@@ -133,7 +133,7 @@ public:
 
     _NerPath__isset __isset;
 
-    bool operator == (const NerPath& rhs) const {
+    bool operator==(const NerPath& rhs) const {
         if (!(ner_list == rhs.ner_list)) {
             return false;
         }
@@ -155,9 +155,7 @@ public:
         return true;
     }
 
-    bool operator != (const NerPath& rhs) const {
-        return !(*this == rhs);
-    }
+    bool operator!=(const NerPath& rhs) const { return !(*this == rhs); }
 };
-}
-}
+} // namespace types
+} // namespace bell

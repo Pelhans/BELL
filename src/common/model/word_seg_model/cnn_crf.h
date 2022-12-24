@@ -8,15 +8,13 @@
 #include "eigen/Dense"
 #include "eigen_utils.h"
 
-const std::map<int, std::string> label2tag = { {0, "S"},
-                                                {1, "B"},
-                                                {2, "I"},
-                                                {3, "E"}};
+const std::map<int, std::string> label2tag = {
+    {0, "S"}, {1, "B"}, {2, "I"}, {3, "E"}};
 
 class CNNCRF {
 public:
-    CNNCRF() {};
-    ~CNNCRF() {};
+    CNNCRF(){};
+    ~CNNCRF(){};
 
     bool load(std::string& cnn_config);
     std::vector<ResultTag> forward(std::vector<std::string>& input);
@@ -48,5 +46,4 @@ private:
     Eigen::MatrixXf m_crf_transistion_layer;
 
     std::map<std::string, int> m_word2id;
-
 };

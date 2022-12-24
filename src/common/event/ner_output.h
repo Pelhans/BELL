@@ -16,10 +16,9 @@ class NerResOutput {
 public:
     NerResOutput() {}
     virtual ~NerResOutput() {}
-
 };
 
-}
-}
+} // namespace event
+} // namespace bell
 
 using NerResOutputPtr = std::shared_ptr<bell::event::NerResOutput>;

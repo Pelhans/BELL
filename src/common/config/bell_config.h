@@ -7,8 +7,8 @@ namespace bell {
 
 class BellConfig {
 public:
-    BellConfig() {};
-    virtual ~BellConfig() {};
+    BellConfig(){};
+    virtual ~BellConfig(){};
     bool init(const std::string& config_file);
 
 private:
@@ -18,5 +18,4 @@ public:
     std::string m_word_seg_model_config;
 };
 
-
-}
+} // namespace bell

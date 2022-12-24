@@ -6,17 +6,22 @@
 
 using namespace bell_model;
 
-bool ModelUtil::cnncrf_predict(const string& model_name, vector<string>& query, vector<ResultTag>& res) {
+bool ModelUtil::cnncrf_predict(const string& model_name, vector<string>& query,
+                               vector<ResultTag>& res) {
     auto mgr = boost::serialization::singleton<ModelMgr>::get_const_instance();
     string name = Model::gen_name(zoo::TYPE_CNNCRF, model_name);
-    shared_ptr<ModelSegCNNCRF> model = std::dynamic_pointer_cast<ModelSegCNNCRF>(mgr.get_model(name));
+    shared_ptr<ModelSegCNNCRF> model =
+        std::dynamic_pointer_cast<ModelSegCNNCRF>(mgr.get_model(name));
     if (!model) {
-        LOG_ERROR << "ModelUtil::cnncrf_predict model not found, model_name: " << name.c_str();
+        LOG_ERROR << "ModelUtil::cnncrf_predict model not found, model_name: "
+                  << name.c_str();
         return false;
     }
 
-    shared_ptr<ModelSegCNNCRFInput> in = std::make_shared<ModelSegCNNCRFInput>(query);
-    shared_ptr<ModelSegCNNCRFOutput> out = std::make_shared<ModelSegCNNCRFOutput>();
+    shared_ptr<ModelSegCNNCRFInput> in =
+        std::make_shared<ModelSegCNNCRFInput>(query);
+    shared_ptr<ModelSegCNNCRFOutput> out =
+        std::make_shared<ModelSegCNNCRFOutput>();
     if (model->predict(in, out)) {
         res = out->res;
         return true;

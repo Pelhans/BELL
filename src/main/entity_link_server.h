@@ -25,26 +25,27 @@ using namespace muduo::net;
 
 class BELLServer {
 public:
-  BELLServer(EventLoop *loop, const InetAddress &listenAddr)
-      : loop_(loop), server_(loop, listenAddr, "BELLServer") {
-    server_.setConnectionCallback(
-        std::bind(&BELLServer::onConnection, this, _1));
-    server_.setMessageCallback(
-        std::bind(&BELLServer::onMessage, this, _1, _2, _3));
-  }
+    BELLServer(EventLoop *loop, const InetAddress &listenAddr)
+        : loop_(loop),
+          server_(loop, listenAddr, "BELLServer") {
+        server_.setConnectionCallback(
+            std::bind(&BELLServer::onConnection, this, _1));
+        server_.setMessageCallback(
+            std::bind(&BELLServer::onMessage, this, _1, _2, _3));
+    }
 
-  void start(const string &conf_file);
+    void start(const string &conf_file);
 
-  void executer(std::shared_ptr<bell::Event> bevent);
-
-private:
-  void onConnection(const TcpConnectionPtr &conn);
-  void onMessage(const TcpConnectionPtr &conn, Buffer *buf, Timestamp time);
-
-  EventLoop *loop_;
-  TcpServer server_;
+    void executer(std::shared_ptr<bell::Event> bevent);
 
 private:
-  bell::BellConfig bell_config;
-  bool use_single_config;
+    void onConnection(const TcpConnectionPtr &conn);
+    void onMessage(const TcpConnectionPtr &conn, Buffer *buf, Timestamp time);
+
+    EventLoop *loop_;
+    TcpServer server_;
+
+private:
+    bell::BellConfig bell_config;
+    bool use_single_config;
 };

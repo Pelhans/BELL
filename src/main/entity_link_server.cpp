@@ -8,43 +8,43 @@ using namespace muduo;
 using namespace muduo::net;
 
 void BELLServer::onConnection(const TcpConnectionPtr &conn) {
-  LOG_TRACE << conn->peerAddress().toIpPort() << " -> "
-            << conn->localAddress().toIpPort() << " is "
-            << (conn->connected() ? "UP" : "DOWN");
+    LOG_TRACE << conn->peerAddress().toIpPort() << " -> "
+              << conn->localAddress().toIpPort() << " is "
+              << (conn->connected() ? "UP" : "DOWN");
 }
 
 void BELLServer::onMessage(const TcpConnectionPtr &conn, Buffer *buf,
                            Timestamp time) {
-  string msg(buf->retrieveAllAsString());
-  auto bevent = std::make_shared<bell::Event>();
-  bevent->req.origin_query = msg;
-  // 功能逻辑在这写
-  executer(bevent);
-  LOG_TRACE << conn->name() << " recv " << msg.size() << " bytes at "
-            << time.toString();
-  conn->send(msg);
+    string msg(buf->retrieveAllAsString());
+    auto bevent = std::make_shared<bell::Event>();
+    bevent->req.origin_query = msg;
+    // 功能逻辑在这写
+    executer(bevent);
+    LOG_TRACE << conn->name() << " recv " << msg.size() << " bytes at "
+              << time.toString();
+    conn->send(msg);
 }
 
 void BELLServer::executer(std::shared_ptr<bell::Event> bevent) {
-  WordSeg word_seg_handler;
-  word_seg_handler.work(bevent);
+    WordSeg word_seg_handler;
+    word_seg_handler.work(bevent);
 }
 
 void BELLServer::start(const string &conf_file) {
-  auto config_manager =
-      boost::serialization::singleton<ConfigManager>::get_const_instance();
-  if (!config_manager.init(conf_file, use_single_config)) {
-    LOG_ERROR << "fail to init config manager";
-    return;
-  }
-  bell_config = config_manager.getDefaultConfig();
-  ResourceInit::init(bell_config);
-  LOG_INFO << "==== Bell server 0. initServece done";
-  LOG_INFO << "==== Load model ...";
-  boost::serialization::singleton<bell_model::ModelMgr>::get_const_instance()
-      .load_all();
-  boost::serialization::singleton<bell_model::ModelMgr>::get_const_instance()
-      .done_reg();
-  LOG_INFO << "==== Bell server start....";
-  server_.start();
+    auto config_manager =
+        boost::serialization::singleton<ConfigManager>::get_const_instance();
+    if (!config_manager.init(conf_file, use_single_config)) {
+        LOG_ERROR << "fail to init config manager";
+        return;
+    }
+    bell_config = config_manager.getDefaultConfig();
+    ResourceInit::init(bell_config);
+    LOG_INFO << "==== Bell server 0. initServece done";
+    LOG_INFO << "==== Load model ...";
+    boost::serialization::singleton<bell_model::ModelMgr>::get_const_instance()
+        .load_all();
+    boost::serialization::singleton<bell_model::ModelMgr>::get_const_instance()
+        .done_reg();
+    LOG_INFO << "==== Bell server start....";
+    server_.start();
 }

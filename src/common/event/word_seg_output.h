@@ -19,7 +19,7 @@ public:
     std::vector<bell::types::NerPath> seg_tag_list;
 };
 
-}
-}
+} // namespace event
+} // namespace bell
 
 using SegResOutputPtr = std::shared_ptr<bell::event::SegResOutput>;
