@@ -37,9 +37,10 @@ int WordSeg::decode(bell::event::SegResOutput &seg_output,
 
     LOG_INFO << "tag_res[0].tags.size(): " << tag_res[0].tags.size();
     LOG_INFO << "input_str_vec.size(): " << input_str_vec.size();
+    int seq_len = tag_res[0].tags.size() - 2;
 
-    if (tag_res[0].tags.size() != (input_str_vec.size() + 2)) {
-        LOG_ERROR << "word seg tag length != input str length";
+    if (seq_len < 0 || seq_len > input_str_vec.size()) {
+        LOG_ERROR << "word seg tag seq_len <= 0";
         return BELL_FAIL;
     }
 
@@ -49,7 +50,7 @@ int WordSeg::decode(bell::event::SegResOutput &seg_output,
 
     string pre_text;
     int pre_term_begin = 0;
-    for (int i = 0; i < input_str_vec.size(); ++i) {
+    for (int i = 0; i < seq_len; ++i) {
         string &cur_tag_str = tag_res[0].tags[i + 1];
         string &cur_str = input_str_vec[i];
         if (cur_tag_str == "S" || cur_tag_str == "B") {

@@ -31,11 +31,13 @@ int BELLServer::executer(std::shared_ptr<bell::Event> bevent) {
     word_seg_handler.work(bevent);
 
     bell::event::SegResOutput &seg_output = bevent->seg_output;
-    auto &ner_list = seg_output.seg_tag_list[0].ner_list;
-    for (auto &entity : ner_list) {
-        LOG_INFO << "entity.text: " << entity.text.c_str()
-                 << " , term_begin: " << entity.term_begin
-                 << " , term_end: " << entity.term_end;
+    if (seg_output.seg_tag_list.size() > 0) {
+        auto &ner_list = seg_output.seg_tag_list[0].ner_list;
+        for (auto &entity : ner_list) {
+            LOG_INFO << "entity.text: " << entity.text.c_str()
+                     << " , term_begin: " << entity.term_begin
+                     << " , term_end: " << entity.term_end;
+        }
     }
     return BELL_SUCESS;
 }
