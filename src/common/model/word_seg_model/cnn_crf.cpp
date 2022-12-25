@@ -19,13 +19,13 @@ std::vector<ResultTag> CNNCRF::forward(std::vector<std::string> &input) {
     input.insert(input.begin(), "[CLS]");
     input.push_back("[SEP]");
     int seq_len = input.size() < max_len ? input.size() : max_len;
-    if (seq_len <= 1) {
+    if (seq_len <= 2) {
         return result_tags;
     }
 
     EigenOp::padding(input, max_len, "[PAD]");
-    MatrixXf emb_input =
-        EigenOp::Embedding(input, m_word2id, m_embedding, m_emb_dim);
+    MatrixXf emb_input(input.size(), m_emb_dim);
+    EigenOp::Embedding(input, m_word2id, m_embedding, m_emb_dim, emb_input);
 
     MatrixXf conv1d_layer_1_out = EigenOp::multi_kernel_conv1d(
         emb_input, m_conv_layer_1_1, m_conv_layer_1_3, m_conv_layer_1_5,
@@ -37,23 +37,24 @@ std::vector<ResultTag> CNNCRF::forward(std::vector<std::string> &input) {
         conv1d_layer_2_out, m_conv_layer_3_1, m_conv_layer_3_3,
         m_conv_layer_3_5, "relu");
 
-    MatrixXf linear_out_1 =
-        EigenOp::Linear(conv1d_layer_3_out, m_fc_0_layer, "tanh");
-    MatrixXf logits = EigenOp::Linear(linear_out_1, m_fc_1_layer, "");
+    MatrixXf linear_out_1;
+    EigenOp::Linear(conv1d_layer_3_out, m_fc_0_layer, "tanh", linear_out_1);
+    MatrixXf logits;
+    EigenOp::Linear(linear_out_1, m_fc_1_layer, "", logits);
 
     if (m_decode_type == "crf") {
         if (m_nbest == 2) {
-            result_tags = EigenOp::viterbi_decode_nbest(
-                logits, seq_len, m_tag_size, m_crf_transistion_layer, m_nbest,
-                label2tag);
+            EigenOp::viterbi_decode_nbest(logits, seq_len, m_tag_size,
+                                          m_crf_transistion_layer, m_nbest,
+                                          label2tag, result_tags);
         } else {
-            result_tags =
-                EigenOp::viterbi_decode(logits, seq_len, m_tag_size,
-                                        m_crf_transistion_layer, label2tag);
+            EigenOp::viterbi_decode(logits, seq_len, m_tag_size,
+                                    m_crf_transistion_layer, label2tag,
+                                    result_tags);
         }
     } else {
-        result_tags =
-            EigenOp::greed_decode(logits, seq_len, m_tag_size, label2tag);
+        EigenOp::greed_decode(logits, seq_len, m_tag_size, label2tag,
+                              result_tags);
     }
 
     return result_tags;

@@ -61,9 +61,6 @@ int WordSeg::decode(bell::event::SegResOutput &seg_output,
                 pre_text = "";
                 ner_list.push_back(entity);
             }
-            // if (cur_tag_str == "B") {
-
-            // }
             pre_term_begin = i;
             pre_text += input_str_vec[i];
         } else if (cur_tag_str == "E" || cur_tag_str == "I") {

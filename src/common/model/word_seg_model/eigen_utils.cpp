@@ -102,10 +102,9 @@ bool EigenOp::ReadDataForVector(std::string path, int a, VectorXf &vectorxf) {
     return true;
 }
 
-MatrixXf EigenOp::im2col(MatrixXf &input, int kernel_size) {
+void EigenOp::im2col(MatrixXf &input, int kernel_size, MatrixXf &output) {
     int length = input.rows();
     int dim = input.cols();
-    MatrixXf output = MatrixXf::Zero(length, kernel_size * dim);
 
     for (int i = 0; i < length; ++i) {
         int start = i - kernel_size / 2;
@@ -117,7 +116,7 @@ MatrixXf EigenOp::im2col(MatrixXf &input, int kernel_size) {
             }
         }
     }
-    return output;
+    return;
 }
 
 void EigenOp::padding(std::vector<std::string> &input, int max_len,
@@ -136,11 +135,11 @@ void EigenOp::padding(std::vector<std::string> &input, int max_len,
     }
 }
 
-MatrixXf EigenOp::Embedding(std::vector<std::string> &input,
-                            std::map<std::string, int> &word2id,
-                            Eigen::MatrixXf &embedding, int emb_dim) {
+void EigenOp::Embedding(std::vector<std::string> &input,
+                        std::map<std::string, int> &word2id,
+                        Eigen::MatrixXf &embedding, int emb_dim,
+                        MatrixXf &emb_input) {
     int row = input.size();
-    MatrixXf emb_input(row, emb_dim);
     int id = 1;
 
     for (size_t i = 0; i < input.size(); ++i) {
@@ -151,25 +150,27 @@ MatrixXf EigenOp::Embedding(std::vector<std::string> &input,
         }
         emb_input.row(i) = embedding.row(id);
     }
-    return emb_input;
+    return;
 }
 
-MatrixXf EigenOp::Linear(MatrixXf &input, fnnConnectLayer &fc,
-                         std::string active) {
-    MatrixXf output = input * fc.weight;
+void EigenOp::Linear(MatrixXf &input, fnnConnectLayer &fc, std::string active,
+                     MatrixXf &output) {
+    output = input * fc.weight;
     output.rowwise() += fc.bias.transpose();
     if (active == "relu") {
         relu(output);
     } else if (active == "tanh") {
         ctanh(output);
     }
-    return output;
+    return;
 }
 
-MatrixXf EigenOp::Conv1d(MatrixXf &input, conv1DLayer &conv,
-                         std::string active) {
-    MatrixXf input_2_col = EigenOp::im2col(input, conv.kernel_size);
-    MatrixXf output = input_2_col * conv.weight;
+void EigenOp::Conv1d(MatrixXf &input, conv1DLayer &conv, std::string active,
+                     MatrixXf &output) {
+    MatrixXf input_2_col =
+        MatrixXf::Zero(input.rows(), conv.kernel_size * input.cols());
+    EigenOp::im2col(input, conv.kernel_size, input_2_col);
+    output = input_2_col * conv.weight;
     output.rowwise() += conv.bias.transpose();
 
     if (active == "relu") {
@@ -180,15 +181,18 @@ MatrixXf EigenOp::Conv1d(MatrixXf &input, conv1DLayer &conv,
         LOG_ERROR << "word seg cnn_crf model conv1d active func not exist: "
                   << active.c_str();
     }
-    return output;
+    return;
 }
 
 MatrixXf EigenOp::multi_kernel_conv1d(MatrixXf &emb_input, conv1DLayer &layer1,
                                       conv1DLayer &layer2, conv1DLayer &layer3,
                                       const std::string active) {
-    MatrixXf conv11_input = Conv1d(emb_input, layer1, "relu");
-    MatrixXf conv13_input = Conv1d(emb_input, layer2, "relu");
-    MatrixXf conv15_input = Conv1d(emb_input, layer3, "relu");
+    MatrixXf conv11_input;
+    Conv1d(emb_input, layer1, "relu", conv11_input);
+    MatrixXf conv13_input;
+    Conv1d(emb_input, layer2, "relu", conv13_input);
+    MatrixXf conv15_input;
+    Conv1d(emb_input, layer3, "relu", conv15_input);
 
     MatrixXf out_input(
         conv11_input.rows(),
@@ -246,10 +250,11 @@ bool EigenOp::softmax(Eigen::VectorXf &input_vector) {
 }
 
 // decode
-std::vector<ResultTag> EigenOp::viterbi_decode_nbest(
-    Eigen::MatrixXf &input, int seq_len, int tag_size,
-    Eigen::MatrixXf &crf_transistion, int nbest,
-    const std::map<int, std::string> &label2tag) {
+void EigenOp::viterbi_decode_nbest(Eigen::MatrixXf &input, int seq_len,
+                                   int tag_size,
+                                   Eigen::MatrixXf &crf_transistion, int nbest,
+                                   const std::map<int, std::string> &label2tag,
+                                   std::vector<ResultTag> &result_tag) {
     std::vector<Eigen::MatrixXf> scores(seq_len);
     Eigen::MatrixXf x = Eigen::MatrixXf::Zero(tag_size, tag_size);
     for (int i = 0; i < seq_len; ++i) {
@@ -328,16 +333,15 @@ std::vector<ResultTag> EigenOp::viterbi_decode_nbest(
     }
     softmax(final_scores);
     decode_id.transposeInPlace();
-    std::vector<ResultTag> result_tag =
-        mapping_id(decode_id, final_scores, label2tag);
+    mapping_id(decode_id, final_scores, label2tag, result_tag);
 
-    return result_tag;
+    return;
 }
 
-std::vector<ResultTag> EigenOp::viterbi_decode(
-    Eigen::MatrixXf &input, int seq_len, int tag_size,
-    Eigen::MatrixXf &crf_transistion,
-    const std::map<int, std::string> &label2tag) {
+void EigenOp::viterbi_decode(Eigen::MatrixXf &input, int seq_len, int tag_size,
+                             Eigen::MatrixXf &crf_transistion,
+                             const std::map<int, std::string> &label2tag,
+                             std::vector<ResultTag> &result_tag) {
     std::vector<Eigen::MatrixXf> scores(seq_len);
     Eigen::MatrixXf x = Eigen::MatrixXf::Zero(tag_size, tag_size);
     for (int i = 0; i < seq_len; ++i) {
@@ -373,18 +377,18 @@ std::vector<ResultTag> EigenOp::viterbi_decode(
     for (int i = seq_len - 2; i >= 0; i--) {
         decode_id(i) = back_points(i, pointer);
     }
-    std::vector<ResultTag> result_tag = mapping_id(decode_id, label2tag);
+    mapping_id(decode_id, label2tag, result_tag);
 
-    return result_tag;
+    return;
 }
 
-std::vector<ResultTag> EigenOp::greed_decode(
-    Eigen::MatrixXf &input, int seq_len, int tag_size,
-    const std::map<int, std::string> &label2tag) {
+void EigenOp::greed_decode(Eigen::MatrixXf &input, int seq_len, int tag_size,
+                           const std::map<int, std::string> &label2tag,
+                           std::vector<ResultTag> &result_tag) {
     Eigen::VectorXi decode_id = Eigen::VectorXi::Zero(seq_len);
     get_max_index(input, decode_id, 1);
-    std::vector<ResultTag> result_tags = mapping_id(decode_id, label2tag);
-    return result_tags;
+    mapping_id(decode_id, label2tag, result_tag);
+    return;
 }
 
 void EigenOp::get_max_and_index(Eigen::MatrixXf &input,
@@ -436,33 +440,31 @@ void EigenOp::get_max_index(Eigen::MatrixXf &input, Eigen::VectorXi &indexs,
     }
 }
 
-std::vector<ResultTag> EigenOp::mapping_id(
-    Eigen::VectorXi &decode_id, const std::map<int, std::string> &label2tag) {
+void EigenOp::mapping_id(Eigen::VectorXi &decode_id,
+                         const std::map<int, std::string> &label2tag,
+                         std::vector<ResultTag> &result_tags) {
     int size = decode_id.size();
-    std::vector<ResultTag> result_tags;
     ResultTag result_tag;
     std::vector<std::string> tags(size);
     for (int i = 0; i < size; ++i) {
         if (label2tag.find(decode_id(i)) != label2tag.end()) {
             tags[i] = label2tag.at(decode_id(i));
         } else {
-            return std::vector<ResultTag>();
+            return;
         }
     }
     result_tag.prob = -1;
     result_tag.tags = tags;
     result_tags.push_back(result_tag);
-    return result_tags;
+    return;
 }
-
-std::vector<ResultTag> EigenOp::mapping_id(
-    Eigen::MatrixXi &decode_id, Eigen::VectorXf &scores,
-    const std::map<int, std::string> &label2tag) {
-    std::vector<ResultTag> result_tags;
+void EigenOp::mapping_id(Eigen::MatrixXi &decode_id, Eigen::VectorXf &scores,
+                         const std::map<int, std::string> &label2tag,
+                         std::vector<ResultTag> &result_tags) {
     int rows = decode_id.rows(), cols = decode_id.cols();
 
     if (scores.size() != decode_id.rows()) {
-        return result_tags;
+        return;
     }
 
     for (int r = 0; r < rows; ++r) {
@@ -473,14 +475,14 @@ std::vector<ResultTag> EigenOp::mapping_id(
             if (label2tag.find(id) != label2tag.end()) {
                 tags[c] = label2tag.at(id);
             } else {
-                return std::vector<ResultTag>();
+                return;
             }
         }
         result_tag.prob = scores[r];
         result_tag.tags = tags;
         result_tags.push_back(result_tag);
     }
-    return result_tags;
+    return;
 }
 
 void EigenOp::get_top2_values(Eigen::MatrixXf &input,

@@ -37,10 +37,10 @@ public:
     static bool softmax(Eigen::VectorXf& input_vector);
     static bool softmax(MatrixXf& matrix, MatrixXf& out, int dim);
 
-    static MatrixXf Linear(MatrixXf& input, fnnConnectLayer& fc,
-                           std::string active);
-    static MatrixXf Conv1d(MatrixXf& input, conv1DLayer& conv,
-                           std::string active);
+    static void Linear(MatrixXf& input, fnnConnectLayer& fc, std::string active,
+                       MatrixXf& output);
+    static void Conv1d(MatrixXf& input, conv1DLayer& conv, std::string active,
+                       MatrixXf& output);
     static MatrixXf multi_kernel_conv1d(MatrixXf& emb_input,
                                         conv1DLayer& layer1,
                                         conv1DLayer& layer2,
@@ -48,26 +48,27 @@ public:
                                         const std::string active);
 
     // decode
-    static std::vector<ResultTag> viterbi_decode_nbest(
+    static void viterbi_decode_nbest(
         Eigen::MatrixXf& input, int seq_len, int tag_size,
         Eigen::MatrixXf& crf_transistion, int nbest,
-        const std::map<int, std::string>& label2tag);
-    static std::vector<ResultTag> viterbi_decode(
-        Eigen::MatrixXf& input, int seq_len, int tag_size,
-        Eigen::MatrixXf& crf_transistion,
-        const std::map<int, std::string>& label2tag);
-    static std::vector<ResultTag> greed_decode(
-        Eigen::MatrixXf& input, int seq_len, int tag_size,
-        const std::map<int, std::string>& label2tag);
+        const std::map<int, std::string>& label2tag,
+        std::vector<ResultTag>& result_tag);
+    static void viterbi_decode(Eigen::MatrixXf& input, int seq_len,
+                               int tag_size, Eigen::MatrixXf& crf_transistion,
+                               const std::map<int, std::string>& label2tag,
+                               std::vector<ResultTag>& result_tag);
+    static void greed_decode(Eigen::MatrixXf& input, int seq_len, int tag_size,
+                             const std::map<int, std::string>& label2tag,
+                             std::vector<ResultTag>& result_tag);
     static void get_top2_values(Eigen::MatrixXf& input,
                                 Eigen::MatrixXf& partition,
                                 Eigen::MatrixXi& indexs);
-    static std::vector<ResultTag> mapping_id(
-        Eigen::MatrixXi& decode_id, Eigen::VectorXf& scores,
-        const std::map<int, std::string>& label2tag);
-    static std::vector<ResultTag> mapping_id(
-        Eigen::VectorXi& decode_id,
-        const std::map<int, std::string>& label2tag);
+    static void mapping_id(Eigen::MatrixXi& decode_id, Eigen::VectorXf& scores,
+                           const std::map<int, std::string>& label2tag,
+                           std::vector<ResultTag>& result_tags);
+    static void mapping_id(Eigen::VectorXi& decode_id,
+                           const std::map<int, std::string>& label2tag,
+                           std::vector<ResultTag>& result_tags);
     static void get_max_and_index(Eigen::MatrixXf& input,
                                   Eigen::VectorXf& partition,
                                   Eigen::VectorXi& indexs);
@@ -75,12 +76,13 @@ public:
                               int axis = 0);
 
     // matrix op
-    static MatrixXf im2col(MatrixXf& input, int kernel_size);
+    static void im2col(MatrixXf& input, int kernel_size, MatrixXf& output);
     static void padding(std::vector<std::string>& input, int max_len,
                         std::string pad_str);
-    static MatrixXf Embedding(std::vector<std::string>& input,
-                              std::map<std::string, int>& word2id,
-                              Eigen::MatrixXf& embedding, int emb_dim);
+    static void Embedding(std::vector<std::string>& input,
+                          std::map<std::string, int>& word2id,
+                          Eigen::MatrixXf& embedding, int emb_dim,
+                          MatrixXf& emb_input);
 
     // basic func
     static bool ReadData(std::string path, int a, int b, MatrixXf& matrix);
