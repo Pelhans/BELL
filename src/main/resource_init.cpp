@@ -1,4 +1,7 @@
 #include "resource_init.h"
+
+#include "common/data/file_registerh"
+
 #include "common/model/model_manager.h"
 #include "common/model/model_seg_cnncrf.h"
 #include "muduo/base/Logging.h"
@@ -21,9 +24,21 @@ bool ResourceInit::init_func(const bell::BellConfig &config) {
         LOG_ERROR << "fail to init word seg cnn crf";
         return false;
     }
+
+    if (!initDictMeta()) {
+        LOG_ERROR << "fail to init dict meta config";
+        return false;
+    }
+
     std::call_once(flag1, initWordSeg, "word_seg_cnn_crf",
                    config.m_word_seg_model_config);
     LOG_INFO << "Resource::init_func end.";
+    return true;
+}
+
+bool ResourceInit::initDictMeta() {
+    LOG_INFO << "start to init dict meta data";
+    FileRegister();
     return true;
 }
 

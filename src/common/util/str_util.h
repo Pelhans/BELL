@@ -32,6 +32,15 @@ inline int string2vector(const std::string& text, std::vector<std::string>& v) {
     return 0;
 }
 
+template <typename T>
+inline T stringtolong(const std::string& str) {
+    T result;
+    std::stringstream ss;
+    ss << str;
+    ss >> result;
+    return result;
+}
+
 inline int vector2map(std::map<std::string, int>& m) {
     for (int i = 0; i < punctuations.size(); i++) {
         std::string p = punctuations[i];

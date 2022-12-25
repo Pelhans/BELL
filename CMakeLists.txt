@@ -8,7 +8,7 @@ ADD_DEFINITIONS(
 )
 ##############################
 set(BELL_ROOT "${PROJECT_SOURCE_DIR}/src")
-set(MUDUO_PATH "${PROJECT_SOURCE_DIR}/submodules")
+set(SUBMODULES_PATH "${PROJECT_SOURCE_DIR}/submodules")
 
 set(CMAKE_VERBOSE_MAKEFILE OFF)
 
@@ -29,26 +29,29 @@ set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 
 include_directories(
-  "${MUDUO_PATH}"
+  "${SUBMODULES_PATH}"
   "${BELL_ROOT}"
   "${BELL_ROOT}/common"
+  "${BELL_ROOT}/common/data"
+  "${BELL_ROOT}/common/data/record"
   "${BELL_ROOT}/common/config"
   "${BELL_ROOT}/common/eigen"
   "${BELL_ROOT}/common/model"
   "${BELL_ROOT}/common/model/word_seg_model"
   "${BELL_ROOT}/plugins"
   "${BELL_ROOT}/plugins/word_seg"
-  # "${BELL_ROOT}/common"
 )
 
  link_directories(
-  ${MUDUO_PATH}/muduo
-  ${MUDUO_PATH}/muduo/base
-  ${MUDUO_PATH}/muduo/net
+  ${SUBMODULES_PATH}/muduo
+  ${SUBMODULES_PATH}/muduo/base
+  ${SUBMODULES_PATH}/muduo/net
+  ${SUBMODULES_PATH}/json_cpp
  )
 
-add_subdirectory(${MUDUO_PATH}/muduo/base)
-add_subdirectory(${MUDUO_PATH}/muduo/net)
+add_subdirectory(${SUBMODULES_PATH}/muduo/base)
+add_subdirectory(${SUBMODULES_PATH}/muduo/net)
+add_subdirectory(${SUBMODULES_PATH}/json_cpp)
 add_subdirectory(${BELL_ROOT}/common common)
 add_subdirectory(${BELL_ROOT}/plugins plugins)
 add_subdirectory(${BELL_ROOT}/main main)

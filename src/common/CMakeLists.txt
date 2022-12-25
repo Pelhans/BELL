@@ -1,4 +1,6 @@
 file(GLOB LIB_SOURCES
+    "data/*.cpp"
+    "data/record/*.cpp"
     "util/*.cpp"
     "config/*.cpp"
     "model/*.cpp"

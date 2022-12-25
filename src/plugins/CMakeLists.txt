@@ -1,4 +1,3 @@
-#add_subdirectory(word_seg)
 file(GLOB LIB_SOURCES
     "word_seg/*.cpp"
 )

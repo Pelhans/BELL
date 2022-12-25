@@ -14,6 +14,8 @@ public:
 private:
     static bool init_func(const bell::BellConfig &config);
 
+    static bool initDictMeta();
+
     static bool initWordSeg(const std::string &model_name,
                             const std::string &cnn_crf_config);
 
