@@ -15,7 +15,8 @@ public:
     BufferLoader* get_buffer(const string& buffer_name);
 
     void load_all();
+
 public:
     std::map<string, BufferLoader*> m_buffer_map;
 };
-}
+} // namespace bell

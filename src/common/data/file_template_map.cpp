@@ -15,12 +15,16 @@ namespace bell {
 
 FileTemplateMap* GetTemplateMapDict(const string& buffer_name) {
     if (buffer_name.empty()) {
-        LOG_ERROR << "Get buffer from dict framework failed for empty buffer_name";
+        LOG_ERROR
+            << "Get buffer from dict framework failed for empty buffer_name";
         return nullptr;
     }
-    auto buffer_loader =boost::serialization::singleton<DictManager>::get_const_instance().get_buffer(buffer_name);
+    auto buffer_loader =
+        boost::serialization::singleton<DictManager>::get_const_instance()
+            .get_buffer(buffer_name);
     if (buffer_loader == nullptr) {
-        LOG_ERROR << "Get buffer from dict framework failed for " << buffer_name;
+        LOG_ERROR << "Get buffer from dict framework failed for "
+                  << buffer_name;
         return nullptr;
     }
     auto template_map = dynamic_cast<FileTemplateMap*>(buffer_loader);

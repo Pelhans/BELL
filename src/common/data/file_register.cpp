@@ -22,14 +22,15 @@ bool FileRegister() {
 
 bool DictRegister() {
     auto m = DictRecordFactory::Inst()->GetBufferLoaderMap();
-    for (auto it=m.begin(); it!=m.end(); ++it) {
+    for (auto it = m.begin(); it != m.end(); ++it) {
         auto ptr = it->second();
         if (!ptr) {
             return false;
         }
         ptr->m_str_buffer_name = it->first;
         ptr->m_file_name = it->first;
-        boost::serialization::singleton<DictManager>::get_const_instance().register_loader(it->first, ptr);
+        boost::serialization::singleton<DictManager>::get_const_instance()
+            .register_loader(it->first, ptr);
     }
 }
 

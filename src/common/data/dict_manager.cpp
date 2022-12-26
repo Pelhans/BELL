@@ -3,10 +3,13 @@
 
 using namespace bell;
 
-int DictManager::register_loader(const string& buffer_name, BufferLoader* loader){
+int DictManager::register_loader(const string& buffer_name,
+                                 BufferLoader* loader) {
     auto iter = m_buffer_map.find(buffer_name);
     if (iter != m_buffer_map.end()) {
-        LOG_WARN << "buffer_name: " << buffer_name.c_str() << " has been loaded before, please check your file register!!";
+        LOG_WARN
+            << "buffer_name: " << buffer_name.c_str()
+            << " has been loaded before, please check your file register!!";
         return -1;
     }
     m_buffer_map[buffer_name] = loader;
