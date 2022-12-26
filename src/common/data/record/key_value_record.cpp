@@ -13,7 +13,7 @@ int KeyValueRecord::recordParse(const string& line, string& key) {
         return ret;
     }
 
-    if (!js.m_value.isMember("key_word")) {
+    if (js.m_value.isMember("key_word")) {
         ret = js.get_string("key_word", key);
         if (!ret) {
             LOG_ERROR << "line: " << line.c_str()
@@ -21,16 +21,15 @@ int KeyValueRecord::recordParse(const string& line, string& key) {
             return ret;
         }
     } else {
-        LOG_ERROR << "line: " << line.c_str()
-                  << " get_string key_word is failed!!";
+        LOG_ERROR << "line: " << line.c_str() << " don't has key_word!!";
         return ret;
     }
 
-    if (!js.m_value.isMember("value")) {
+    if (js.m_value.isMember("value")) {
         ret = js.get_float("value", m_value);
         if (!ret) {
             LOG_ERROR << "line: " << line.c_str()
-                      << " get_string key_word is failed!!";
+                      << " get_string value is failed!!";
             return ret;
         }
     }

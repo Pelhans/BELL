@@ -36,12 +36,14 @@ FileTemplateMap* GetTemplateMapDict(const string& buffer_name) {
     return template_map;
 }
 
-bool FileTemplateMap::load(const string& fname) {
-    LOG_INFO << "start to load data from file: " << fname.c_str();
-    std::ifstream fin(fname);
+int FileTemplateMap::load(const string& fname) {
+    string path = "./deploy/data/data_file/";
+    string path2fname = path + fname;
+    LOG_INFO << "start to load data from file: " << path2fname.c_str();
+    std::ifstream fin(path2fname);
     if (!fin) {
         LOG_WARN << "load file: " << fname.c_str() << " failed";
-        return false;
+        return -1;
     }
     struct timeval start, end;
     gettimeofday(&start, NULL);
@@ -52,7 +54,7 @@ bool FileTemplateMap::load(const string& fname) {
         fin.close();
         LOG_WARN << "Invalid record size: " << record_size << " for file"
                  << fname.c_str();
-        return false;
+        return -1;
     }
     LOG_INFO << "record size = " << record_size
              << " for file: " << fname.c_str();
@@ -68,7 +70,7 @@ bool FileTemplateMap::load(const string& fname) {
         auto record = factory();
         if (!record) {
             LOG_ERROR << "record parse failed: " << fname.c_str();
-            return false;
+            return -1;
         }
         try {
             int ret;
@@ -93,7 +95,7 @@ bool FileTemplateMap::load(const string& fname) {
     LOG_INFO << "FileTemplateMap::load record_size=" << record_size
              << ", load_size=" << load_size << " for line: " << fname
              << ", cost=" << cost;
-    return true;
+    return 0;
 }
 
 } // namespace bell

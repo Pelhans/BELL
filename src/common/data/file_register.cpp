@@ -22,13 +22,16 @@ bool FileRegister() {
 
 bool DictRegister() {
     auto m = DictRecordFactory::Inst()->GetBufferLoaderMap();
+    LOG_INFO << "file_bufferloader_creator_map_.size: " << m.size();
     for (auto it = m.begin(); it != m.end(); ++it) {
         auto ptr = it->second();
         if (!ptr) {
+            LOG_INFO << "dict register load fail: " << it->first;
             return false;
         }
         ptr->m_str_buffer_name = it->first;
         ptr->m_file_name = it->first;
+        LOG_INFO << "dict register load sucess: " << it->first;
         boost::serialization::singleton<DictManager>::get_const_instance()
             .register_loader(it->first, ptr);
     }

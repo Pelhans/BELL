@@ -11,8 +11,7 @@ public:
 
 public:
     BufferLoader() {}
-    virtual int load(const string& fileName, bool init = false) = 0;
-    virtual int loadIncrement(const string& file_path, bool init = false) = 0;
+    virtual int load(const string& fileName) = 0;
 
     virtual void* getBufferPtr() = 0;
     // virtual ~BufferLoader();

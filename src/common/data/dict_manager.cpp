@@ -15,6 +15,7 @@ int DictManager::register_loader(const string& buffer_name,
     m_buffer_map[buffer_name] = loader;
     LOG_INFO << "开始加载 dict: " << buffer_name.c_str();
     loader->load(buffer_name);
+    LOG_INFO << "当前字典加载完毕: " << buffer_name.c_str();
     return 0;
 }
 

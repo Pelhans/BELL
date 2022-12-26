@@ -36,20 +36,7 @@ public:
 
     virtual void* getBufferPtr() override { return this; }
 
-    virtual int load(const string& fname, bool init = false) override {
-        return 0;
-    }
-
-    virtual int loadIncrement(const string& file_path,
-                              bool init = false) override {
-        return 0;
-    }
-
-    bool load(const string& fname);
-
-public:
-    string m_str_buffer_name;
-    string m_file_name;
+    virtual int load(const string& fname) override;
 
 private:
     std::shared_ptr<KeyRecordMap> base_key_record_map_;

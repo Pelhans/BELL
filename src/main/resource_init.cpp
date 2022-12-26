@@ -30,6 +30,8 @@ bool ResourceInit::init_func(const bell::BellConfig &config) {
         return false;
     }
 
+    LOG_INFO << "字典加载完成了";
+
     std::call_once(flag1, initWordSeg, "word_seg_cnn_crf",
                    config.m_word_seg_model_config);
     LOG_INFO << "Resource::init_func end.";
