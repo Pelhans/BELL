@@ -1,15 +1,36 @@
 #include "file_template_map.h"
+#include "dict_manager.h"
 #include "util/md5.h"
 #include "util/str_util.h"
 #include <sys/time.h>
 #include <fstream>
 #include <functional>
+#include <boost/serialization/singleton.hpp>
 
 using std::shared_ptr;
 using std::string;
 using std::vector;
 
 namespace bell {
+
+FileTemplateMap* GetTemplateMapDict(const string& buffer_name) {
+    if (buffer_name.empty()) {
+        LOG_ERROR << "Get buffer from dict framework failed for empty buffer_name";
+        return nullptr;
+    }
+    auto buffer_loader =boost::serialization::singleton<DictManager>::get_const_instance().get_buffer(buffer_name);
+    if (buffer_loader == nullptr) {
+        LOG_ERROR << "Get buffer from dict framework failed for " << buffer_name;
+        return nullptr;
+    }
+    auto template_map = dynamic_cast<FileTemplateMap*>(buffer_loader);
+    if (template_map == nullptr) {
+        LOG_ERROR << "Cast bufloader to templatemap failed for " << buffer_name;
+        return nullptr;
+    }
+    LOG_INFO << "get templatemap dict succeed for " << buffer_name;
+    return template_map;
+}
 
 bool FileTemplateMap::load(const string& fname) {
     LOG_INFO << "start to load data from file: " << fname.c_str();

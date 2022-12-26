@@ -10,8 +10,6 @@
 using std::string;
 
 namespace bell {
-#define REGISTER_RECORD_TO_FACTORY(NAME) registerRecord<Nmae>(#NAME)
-
 class DictRecordFactory {
 public:
     static DictRecordFactory* Inst() {

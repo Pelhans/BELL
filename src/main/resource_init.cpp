@@ -1,6 +1,6 @@
 #include "resource_init.h"
 
-#include "common/data/file_registerh"
+#include "common/data/file_register.h"
 
 #include "common/model/model_manager.h"
 #include "common/model/model_seg_cnncrf.h"
@@ -39,6 +39,7 @@ bool ResourceInit::init_func(const bell::BellConfig &config) {
 bool ResourceInit::initDictMeta() {
     LOG_INFO << "start to init dict meta data";
     FileRegister();
+    DictRegister();
     return true;
 }
 
