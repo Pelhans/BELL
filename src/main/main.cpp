@@ -48,8 +48,6 @@ int main(int argc, char *argv[]) {
                 break;
         }
     }
-    //  string conf_file =
-    //  "/home/pelhans/project/BELL/deploy/conf/total_conf_base.xml";
 
     LOG_INFO << "pid = " << getpid() << ", tid = " << CurrentThread::tid();
     LOG_INFO << "conf_file path: " << conf_file.c_str();

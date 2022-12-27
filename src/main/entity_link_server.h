@@ -48,5 +48,5 @@ private:
 
 private:
     bell::BellConfig bell_config;
-    bool use_single_config;
+    bool use_single_config = true;
 };
