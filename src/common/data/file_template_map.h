@@ -43,4 +43,6 @@ private:
     std::shared_ptr<KeyRecordMap> inc_key_record_map_;
 };
 
+FileTemplateMap* GetTemplateMapDict(const string& buffer_name);
+
 } // namespace bell

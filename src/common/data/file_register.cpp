@@ -22,7 +22,8 @@ bool FileRegister() {
 
 bool DictRegister() {
     auto m = DictRecordFactory::Inst()->GetBufferLoaderMap();
-    auto dict_manager = boost::serialization::singleton<DictManager>::get_const_instance();
+    auto dict_manager =
+        boost::serialization::singleton<DictManager>::get_const_instance();
     LOG_INFO << "file_bufferloader_creator_map_.size: " << m.size();
     for (auto it = m.begin(); it != m.end(); ++it) {
         auto ptr = it->second();
