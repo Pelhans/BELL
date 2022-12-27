@@ -42,6 +42,7 @@ bool ResourceInit::initDictMeta() {
     LOG_INFO << "start to init dict meta data";
     FileRegister();
     DictRegister();
+    LOG_INFO << "dict mtea load done....";
     return true;
 }
 

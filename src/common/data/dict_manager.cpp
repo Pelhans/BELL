@@ -3,8 +3,8 @@
 
 using namespace bell;
 
-int DictManager::register_loader(const string& buffer_name,
-                                 BufferLoader* loader) {
+void DictManager::register_loader(BufferLoader* loader) {
+    const string& buffer_name = loader->m_file_name;
     auto iter = m_buffer_map.find(buffer_name);
     if (iter != m_buffer_map.end()) {
         LOG_WARN
@@ -16,7 +16,7 @@ int DictManager::register_loader(const string& buffer_name,
     LOG_INFO << "开始加载 dict: " << buffer_name.c_str();
     loader->load(buffer_name);
     LOG_INFO << "当前字典加载完毕: " << buffer_name.c_str();
-    return 0;
+    return;
 }
 
 BufferLoader* DictManager::get_buffer(const string& buffer_name) {

@@ -11,7 +11,9 @@ using std::string;
 namespace bell {
 class DictManager {
 public:
-    int register_loader(const string& buffer_name, BufferLoader* loader);
+    DictManager() {}
+    ~DictManager() {}
+    void register_loader(BufferLoader* loader);
     BufferLoader* get_buffer(const string& buffer_name);
 
     void load_all();

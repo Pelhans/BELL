@@ -22,6 +22,7 @@ bool FileRegister() {
 
 bool DictRegister() {
     auto m = DictRecordFactory::Inst()->GetBufferLoaderMap();
+    auto dict_manager = boost::serialization::singleton<DictManager>::get_const_instance();
     LOG_INFO << "file_bufferloader_creator_map_.size: " << m.size();
     for (auto it = m.begin(); it != m.end(); ++it) {
         auto ptr = it->second();
@@ -32,9 +33,9 @@ bool DictRegister() {
         ptr->m_str_buffer_name = it->first;
         ptr->m_file_name = it->first;
         LOG_INFO << "dict register load sucess: " << it->first;
-        boost::serialization::singleton<DictManager>::get_const_instance()
-            .register_loader(it->first, ptr);
+        dict_manager.register_loader(ptr);
     }
+    return true;
 }
 
 } // namespace bell

@@ -14,5 +14,5 @@ public:
     virtual int load(const string& fileName) = 0;
 
     virtual void* getBufferPtr() = 0;
-    // virtual ~BufferLoader();
+    virtual ~BufferLoader() {};
 };
