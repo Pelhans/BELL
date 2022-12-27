@@ -7,7 +7,8 @@
 using std::string;
 
 template <typename TRecord>
-static bool match_key_word(const string& file_name, const string& key_word, Trecord& record) {
+static bool match_key_word(const string& file_name, const string& key_word,
+                           Trecord& record) {
     auto template_map = GetTemplateMapDict(file_name);
     if (!template_map) {
         LOG_ERROR << "dict match fail to load file: " << file_name.c_str();

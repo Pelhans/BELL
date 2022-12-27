@@ -29,8 +29,8 @@ FileTemplateMap* GetTemplateMapDict(const string& buffer_name) {
     }
     auto template_map = dynamic_cast<FileTemplateMap*>(buffer_loader);
     if (template_map == nullptr) {
-        LOG_ERROR << "Cast bufloader to templatemap failed for " <<
-        buffer_name; return nullptr;
+        LOG_ERROR << "Cast bufloader to templatemap failed for " << buffer_name;
+        return nullptr;
     }
     LOG_INFO << "get templatemap dict succeed for " << buffer_name;
     return template_map;
