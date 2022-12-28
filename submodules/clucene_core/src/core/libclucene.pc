@@ -1,0 +1,11 @@
+prefix=/usr/local
+exec_prefix=/usr/local/bin
+libdir=/usr/local/lib
+includedir=/usr/local/include
+
+Name: libclucene
+Description: CLucene - a C++ search engine, ported from the popular Apache Lucene
+Version: 0.9.23.0
+Libs: -L/usr/local/lib/ -llibclucene
+Cflags: -I/usr/local/include
+~
