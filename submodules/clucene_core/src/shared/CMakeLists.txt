@@ -338,6 +338,10 @@ install(TARGETS clucene-shared
         DESTINATION ${LIB_DESTINATION} 
         COMPONENT development )
 
+install(TARGETS clucene-shared DESTINATION lib)
+
+install(FILES ${HEADERS} DESTINATION include/CLucene)
+
 IF ( BUILD_STATIC_LIBRARIES )
 	add_library(clucene-shared-static STATIC
 		${clucene_shared_Files} ${HEADERS}

@@ -180,18 +180,18 @@ file(GLOB_RECURSE HEADERS ${clucene-core_SOURCE_DIR}/*.h)
 #create the libraries
 INCLUDE_DIRECTORIES( ${clucene_SOURCE_DIR}/src/core )
 
-add_library(clucene-core SHARED
+add_library(clucene_core SHARED
 	${clucene_core_Files} ${clucene_shared_Files} ${HEADERS}
 )
 
 #set properties on the libraries
-SET_TARGET_PROPERTIES(clucene-core PROPERTIES
+SET_TARGET_PROPERTIES(clucene_core PROPERTIES
     VERSION ${CLUCENE_VERSION}
     SOVERSION ${CLUCENE_SOVERSION}
     COMPILE_DEFINITIONS_DEBUG _DEBUG
 )
 
-TARGET_LINK_LIBRARIES(clucene-core clucene-shared ${EXTRA_LIBS})
+TARGET_LINK_LIBRARIES(clucene_core clucene-shared ${EXTRA_LIBS})
 
 #install public headers.
 FOREACH(file ${HEADERS})
@@ -236,8 +236,10 @@ ELSE ( LUCENE_SYS_INCLUDES )
             COMPONENT development)
 ENDIF ( LUCENE_SYS_INCLUDES )
 
-
 #and install library
-install(TARGETS clucene-core 
+install(TARGETS clucene_core 
         DESTINATION ${LIB_DESTINATION}  
         COMPONENT runtime )
+install(TARGETS clucene_core DESTINATION lib)
+
+install(FILES ${HEADERS} DESTINATION include/CLucene)

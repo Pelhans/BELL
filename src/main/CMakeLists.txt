@@ -9,4 +9,5 @@ TARGET_LINK_LIBRARIES(
    plugins_lib
    common_lib
    json_cpp
+   clucene_core
 )
