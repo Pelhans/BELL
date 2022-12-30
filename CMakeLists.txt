@@ -43,6 +43,7 @@ include_directories(
   "${BELL_ROOT}/common/model/word_seg_model"
   "${BELL_ROOT}/plugins"
   "${BELL_ROOT}/plugins/word_seg"
+  "${SUBMODULES_PATH}/clucene_core/src"
 )
 
  link_directories(
