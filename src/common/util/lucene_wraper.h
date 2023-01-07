@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-#include "clucene_core/src/core/CLucene/analysis/Analyzers.h"
+#include "clucene_core/analysis/standard/StandardAnalyzer.h"
 
 #include <stdio.h>
 #include <iostream>
@@ -12,8 +12,8 @@ using namespace std;
 namespace bell {
 class LuceneWraper {
 public:
-    static void IndexFiles(const char* path, const char* target,
-                           const bool clearIndex);
+    static int IndexFiles(const char* path, const char* target,
+                          const bool clearIndex);
 };
 
 } // namespace bell

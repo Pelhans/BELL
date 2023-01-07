@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.0)
 # Define project
 project(bell CXX)
 
-set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/submodules/clucene_core/cmake" "${CMAKE_SOURCE_DIR}/submodules/clucene_core/src/shared/cmake")
+#set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/submodules/clucene_core/cmake" "${CMAKE_SOURCE_DIR}/submodules/clucene_core/src/shared/cmake")
 
 ADD_DEFINITIONS(
   -DISFULLINDEX
@@ -43,7 +43,6 @@ include_directories(
   "${BELL_ROOT}/common/model/word_seg_model"
   "${BELL_ROOT}/plugins"
   "${BELL_ROOT}/plugins/word_seg"
-  "${SUBMODULES_PATH}/clucene_core/src"
 )
 
  link_directories(
@@ -52,10 +51,8 @@ include_directories(
   ${SUBMODULES_PATH}/muduo/net
   ${SUBMODULES_PATH}/json_cpp
   ${SUBMODULES_PATH}/clucene_core
-  ${SUBMODULES_PATH}/clucene_core/src
-  ${SUBMODULES_PATH}/clucene_core/src/core
-  ${SUBMODULES_PATH}/clucene_core/src/ext
-  ${SUBMODULES_PATH}/clucene_core/src/shared
+  ${SUBMODULES_PATH}/clucene_core/analysis
+  ${SUBMODULES_PATH}/clucene_core/analysis/standard
  )
 
 add_subdirectory(${SUBMODULES_PATH}/muduo/base)

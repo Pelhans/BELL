@@ -1,5 +1,10 @@
 #include "lucene_wraper.h"
 
-void IndexFiles(const char* path, const char* target, const bool clearIndex) {
-    
+using namespace bell;
+
+int LuceneWraper::IndexFiles(const char* path, const char* target,
+                             const bool clearIndex) {
+    std::string a = "a";
+    // TestHead::add_str(a);
+    return 0;
 }
