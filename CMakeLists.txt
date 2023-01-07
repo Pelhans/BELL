@@ -40,7 +40,13 @@ include_directories(
   "${BELL_ROOT}/common/model/word_seg_model"
   "${BELL_ROOT}/plugins"
   "${BELL_ROOT}/plugins/word_seg"
+  "${BELL_ROOT}/plugins/recall"
+  "${SUBMODULES_PATH}/clucene_core"
 )
+
+find_library(clucene-core_lib NAMES clucene-core PATHS ./submodules/clucene_core/clucene-core)
+find_library(clucene-shared_lib NAMES clucene-shared PATHS ./submodules/clucene_core/clucene-shared)
+
 
  link_directories(
   ${SUBMODULES_PATH}/muduo

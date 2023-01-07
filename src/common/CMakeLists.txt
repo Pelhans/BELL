@@ -13,4 +13,4 @@ set(LIB_LINK_LIBRARIES
 )
 
 add_library(common_lib SHARED ${LIB_SOURCES})
-target_link_libraries(common_lib ${LIB_LINK_LIBRARIES})
+target_link_libraries(common_lib ${LIB_LINK_LIBRARIES} clucene-core clucene-shared)
