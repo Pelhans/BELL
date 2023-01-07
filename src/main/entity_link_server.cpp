@@ -1,5 +1,6 @@
 #include "entity_link_server.h"
 #include "seg_handler.h"
+#include "lucene_recall.h"
 
 #include <boost/serialization/singleton.hpp>
 #include <unistd.h>
@@ -39,6 +40,9 @@ int BELLServer::executer(std::shared_ptr<bell::Event> bevent) {
                      << " , term_end: " << entity.term_end;
         }
     }
+    bell::LuceneRecall lucene_recall;
+    lucene_recall.test();
+    LOG_INFO << "lucene_recall done..";
     return BELL_SUCESS;
 }
 

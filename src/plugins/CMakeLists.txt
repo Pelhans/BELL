@@ -1,5 +1,6 @@
 file(GLOB LIB_SOURCES
     "word_seg/*.cpp"
+    "recall/*.cpp"
 )
 
 ADD_LIBRARY(plugins_lib SHARED ${LIB_SOURCES})

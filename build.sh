@@ -8,5 +8,5 @@ mkdir build;
 cd build/;
 #cmake -DCMAKE_BUILD_TYPE="Debug" ..
 cmake -DCMAKE_BUILD_TYPE="" ..
-make;
+make -j${CPU_CORE_NUM};
 cd ../;
