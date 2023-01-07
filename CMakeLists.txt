@@ -3,9 +3,12 @@ cmake_minimum_required(VERSION 3.0)
 # Define project
 project(bell CXX)
 
+#set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/submodules/clucene_core/cmake" "${CMAKE_SOURCE_DIR}/submodules/clucene_core/src/shared/cmake")
+
 ADD_DEFINITIONS(
   -DISFULLINDEX
 )
+
 ##############################
 set(BELL_ROOT "${PROJECT_SOURCE_DIR}/src")
 set(SUBMODULES_PATH "${PROJECT_SOURCE_DIR}/submodules")
@@ -17,7 +20,7 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
 elseif(CMAKE_BUILD_TYPE STREQUAL "Noop")
   set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS} -g -o0 -fPIC -w -Wl,--export-dynamic -Wno-deprecated -fpermissive")
 else()
-  set(CMAKE_CXX_FLAGS "-lstdc++ -std=c++11 ${CMAKE_CXX_FLAGS} -g -O3 -fPIC -w -Wl,--export-dynamic -Wno-deprecated -fpermissive")
+  set(CMAKE_CXX_FLAGS "-lstdc++ -std=c++11 ${CMAKE_CXX_FLAGS} -g -O3 -fPIC -w -Wl,--export-dynamic -Wno-dev -Wno-deprecated -fpermissive")
 endif(CMAKE_BUILD_TYPE STREQUAL "Debug")
 
 message("=================================")
@@ -53,11 +56,15 @@ find_library(clucene-shared_lib NAMES clucene-shared PATHS ./submodules/clucene_
   ${SUBMODULES_PATH}/muduo/base
   ${SUBMODULES_PATH}/muduo/net
   ${SUBMODULES_PATH}/json_cpp
+  ${SUBMODULES_PATH}/clucene_core
+  ${SUBMODULES_PATH}/clucene_core/analysis
+  ${SUBMODULES_PATH}/clucene_core/analysis/standard
  )
 
 add_subdirectory(${SUBMODULES_PATH}/muduo/base)
 add_subdirectory(${SUBMODULES_PATH}/muduo/net)
 add_subdirectory(${SUBMODULES_PATH}/json_cpp)
+add_subdirectory(${SUBMODULES_PATH}/clucene_core)
 add_subdirectory(${BELL_ROOT}/common common)
 add_subdirectory(${BELL_ROOT}/plugins plugins)
 add_subdirectory(${BELL_ROOT}/main main)
