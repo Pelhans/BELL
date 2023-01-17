@@ -47,11 +47,13 @@ include_directories(
   ${SUBMODULES_PATH}/muduo/base
   ${SUBMODULES_PATH}/muduo/net
   ${SUBMODULES_PATH}/json_cpp
+  ${SUBMODULES_PATH}/mini_clucene
  )
 
 add_subdirectory(${SUBMODULES_PATH}/muduo/base)
 add_subdirectory(${SUBMODULES_PATH}/muduo/net)
 add_subdirectory(${SUBMODULES_PATH}/json_cpp)
+add_subdirectory(${SUBMODULES_PATH}/mini_clucene)
 add_subdirectory(${BELL_ROOT}/common common)
 add_subdirectory(${BELL_ROOT}/plugins plugins)
 add_subdirectory(${BELL_ROOT}/main main)
